@@ -1,4 +1,4 @@
-# Analyses of iNaturalist data for Uruguay
+# Visuals for NaturalistaUY data
 Find here some scripts for the analysis of [NaturalistaUY](https://naturalista.uy) data.
 
 
