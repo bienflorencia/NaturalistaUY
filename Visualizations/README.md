@@ -2,4 +2,5 @@
 Find here some scripts for the analysis of [NaturalistaUY](https://naturalista.uy) data.
 
 
- - [Extracción del listado de especies para Uruguay](R/speciesList.R)
+ - [Primeras 14 observaciones en la plataforma](R/iNatUY_14mil.R)
+ - [Primeras 20 observaciones en la plataforma](R/iNatUY_20mil.R)
