@@ -3,4 +3,4 @@ Find here some scripts for the analysis of [NaturalistaUY](https://naturalista.u
 
 
 - [Get list of species](speciesList.R)
-- [Check species list with Biodiversidata data](chequeo_con_Biodiversidata.R)
+- [Check species list with Biodiversidata data](/chequeo_con_Biodiversidata.R)
