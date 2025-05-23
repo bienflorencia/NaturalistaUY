@@ -1,6 +1,9 @@
-# iNat in Uruguay is [NaturalistaUY](https://www.naturalista.uy) :)
-Find here some code for the analysis and visualization of [iNaturalist](https://inaturalist.org) data from Uruguay
+# iNaturalist PLAYGROUND
 
-- [Data Analysis](/Data_Analysis)
+Find here some code for the analysis and visualisation of [iNaturalist](https://inaturalist.org) data.
 
-- [Visualizations](/Visualizations)
+- [functions](/R): several R functions to reuse.  
+- [code](/code): quarto+html files with different analyses.  
+- [data](/data): data used for the analyses.  
+
+> iNaturalist in Uruguay is [NaturalistaUY](https://www.naturalista.uy) :)

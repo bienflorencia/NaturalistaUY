@@ -1,0 +1,432 @@
+﻿scientific_name,taxon_id,iconic_taxon_name,kingdom,class,order,family,genus,species,common_name,taxon_rank
+Accipiter bicolor,5137,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Accipiter,Accipiter bicolor,Gavilán bicolor,species
+Accipiter striatus,5097,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Accipiter,Accipiter striatus,Gavilán Chico,species
+Busarellus nigricollis,5346,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Busarellus,Busarellus nigricollis,Águila Pampa,species
+Buteo swainsoni,5196,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Buteo,Buteo swainsoni,Gavilán langostero,species
+Buteogallus meridionalis,5235,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Buteogallus,Buteogallus meridionalis,Águila colorada,species
+Buteogallus urubitinga,5238,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Buteogallus,Buteogallus urubitinga,Águila negra,species
+Circus buffoni,5177,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Circus,Circus buffoni,Gavilán alilargo,species
+Circus cinereus,5166,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Circus,Circus cinereus,Gavilán ceniciento,species
+Elanoides forficatus,5301,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Elanoides,Elanoides forficatus,Halcón tijereta,species
+Elanus leucurus,5277,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Elanus,Elanus leucurus,Halcón Blanco,species
+Geranoaetus albicaudatus,201043,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Geranoaetus,Geranoaetus albicaudatus,Águila Cola Blanca,species
+Geranoaetus melanoleucus,5422,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Geranoaetus,Geranoaetus melanoleucus,Águila mora,species
+Geranospiza caerulescens,5411,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Geranospiza,Geranospiza caerulescens,Gavilán patas largas,species
+Ictinia mississippiensis,5416,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Ictinia,Ictinia mississippiensis,Milano de Mississippi,species
+Parabuteo unicinctus,5355,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Parabuteo,Parabuteo unicinctus,Gavilán mixto,species
+Rostrhamus sociabilis,5349,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Rostrhamus,Rostrhamus sociabilis,Caracolero,species
+Rupornis magnirostris,201041,Aves,Animalia,Aves,Accipitriformes,Accipitridae,Rupornis,Rupornis magnirostris,Gavilán común,species
+Pandion haliaetus,116999,Aves,Animalia,Aves,Accipitriformes,Pandionidae,Pandion,Pandion haliaetus,Águila pescadora,species
+Amazonetta brasiliensis,7182,Aves,Animalia,Aves,Anseriformes,Anatidae,Amazonetta,Amazonetta brasiliensis,Pato brasilero,species
+Anas bahamensis,6951,Aves,Animalia,Aves,Anseriformes,Anatidae,Anas,Anas bahamensis,Pato gargantilla,species
+Anas flavirostris,6947,Aves,Animalia,Aves,Anseriformes,Anatidae,Anas,Anas flavirostris,Pato barcino,species
+Anas georgica,6988,Aves,Animalia,Aves,Anseriformes,Anatidae,Anas,Anas georgica,Pato maicero,species
+Anas platyrhynchos domesticus,236935,Aves,Animalia,Aves,Anseriformes,Anatidae,Anas,Anas platyrhynchos,Pato doméstico,subspecies
+Anser anser,7018,Aves,Animalia,Aves,Anseriformes,Anatidae,Anser,Anser anser,Ganso común,species
+Anser anser domesticus,120479,Aves,Animalia,Aves,Anseriformes,Anatidae,Anser,Anser anser,Ganso común doméstico,subspecies
+Cairina moschata,7120,Aves,Animalia,Aves,Anseriformes,Anatidae,Cairina,Cairina moschata,Pato criollo,species
+Cairina moschata domestica,204094,Aves,Animalia,Aves,Anseriformes,Anatidae,Cairina,Cairina moschata,Pato real doméstico,subspecies
+Callonetta leucophrys,7188,Aves,Animalia,Aves,Anseriformes,Anatidae,Callonetta,Callonetta leucophrys,Pato de collar,species
+Coscoroba coscoroba,7166,Aves,Animalia,Aves,Anseriformes,Anatidae,Coscoroba,Coscoroba coscoroba,Coscoroba,species
+Cygnus melancoryphus,72789,Aves,Animalia,Aves,Anseriformes,Anatidae,Cygnus,Cygnus melancoryphus,Cisne de cuello negro,species
+Dendrocygna autumnalis,6893,Aves,Animalia,Aves,Anseriformes,Anatidae,Dendrocygna,Dendrocygna autumnalis,Sirirí vientre negro,species
+Dendrocygna bicolor,6899,Aves,Animalia,Aves,Anseriformes,Anatidae,Dendrocygna,Dendrocygna bicolor,Pato Canela,species
+Dendrocygna viduata,6898,Aves,Animalia,Aves,Anseriformes,Anatidae,Dendrocygna,Dendrocygna viduata,Pato cara blanca,species
+Heteronetta atricapilla,7156,Aves,Animalia,Aves,Anseriformes,Anatidae,Heteronetta,Heteronetta atricapilla,Pato de cabeza negra,species
+Mareca sibilatrix,558442,Aves,Animalia,Aves,Anseriformes,Anatidae,Mareca,Mareca sibilatrix,Pato overo,species
+Netta peposaca,7124,Aves,Animalia,Aves,Anseriformes,Anatidae,Netta,Netta peposaca,Pato picazo,species
+Nomonyx dominicus,7172,Aves,Animalia,Aves,Anseriformes,Anatidae,Nomonyx,Nomonyx dominicus,Pato fierro,species
+Oxyura vittata,7077,Aves,Animalia,Aves,Anseriformes,Anatidae,Oxyura,Oxyura vittata,Pato zambullidor,species
+Spatula cyanoptera,558434,Aves,Animalia,Aves,Anseriformes,Anatidae,Spatula,Spatula cyanoptera,Pato colorado,species
+Spatula platalea,558435,Aves,Animalia,Aves,Anseriformes,Anatidae,Spatula,Spatula platalea,Pato cuchara,species
+Spatula versicolor,558431,Aves,Animalia,Aves,Anseriformes,Anatidae,Spatula,Spatula versicolor,Pato capuchino,species
+Anhima cornuta,6908,Aves,Animalia,Aves,Anseriformes,Anhimidae,Anhima,Anhima cornuta,Aruco,species
+Chauna torquata,6910,Aves,Animalia,Aves,Anseriformes,Anhimidae,Chauna,Chauna torquata,Chajá,species
+Chaetura meridionalis,6581,Aves,Animalia,Aves,Caprimulgiformes,Apodidae,Chaetura,Chaetura meridionalis,Vencejo de tormenta,species
+Chordeiles minor,19577,Aves,Animalia,Aves,Caprimulgiformes,Caprimulgidae,Chordeiles,Chordeiles minor,Añapero,species
+Chordeiles nacunda,19661,Aves,Animalia,Aves,Caprimulgiformes,Caprimulgidae,Chordeiles,Chordeiles nacunda,Ñacundá,species
+Hydropsalis torquata,19565,Aves,Animalia,Aves,Caprimulgiformes,Caprimulgidae,Hydropsalis,Hydropsalis torquata,Dormilón tijereta,species
+Setopagis parvula,367507,Aves,Animalia,Aves,Caprimulgiformes,Caprimulgidae,Setopagis,Setopagis parvula,Dormilón Chico,species
+Systellura longirostris,605123,Aves,Animalia,Aves,Caprimulgiformes,Caprimulgidae,Systellura,Systellura longirostris,Dormilón Patagónico,species
+Nyctibius griseus,19667,Aves,Animalia,Aves,Caprimulgiformes,Nyctibiidae,Nyctibius,Nyctibius griseus,Urutaú,species
+Chlorostilbon lucidus,6085,Aves,Animalia,Aves,Caprimulgiformes,Trochilidae,Chlorostilbon,Chlorostilbon lucidus,Picaflor verde,species
+Eupetomena macroura,6065,Aves,Animalia,Aves,Caprimulgiformes,Trochilidae,Eupetomena,Eupetomena macroura,Colibrí Golondrina,species
+Florisuga fusca,6420,Aves,Animalia,Aves,Caprimulgiformes,Trochilidae,Florisuga,Florisuga fusca,Picaflor negro,species
+Heliomaster furcifer,5868,Aves,Animalia,Aves,Caprimulgiformes,Trochilidae,Heliomaster,Heliomaster furcifer,Picaflor de barbijo,species
+Hylocharis chrysura,5979,Aves,Animalia,Aves,Caprimulgiformes,Trochilidae,Hylocharis,Hylocharis chrysura,Picaflor bronceado,species
+Leucochloris albicollis,6521,Aves,Animalia,Aves,Caprimulgiformes,Trochilidae,Leucochloris,Leucochloris albicollis,Picaflor garganta blanca,species
+Cariama cristata,14,Aves,Animalia,Aves,Cariamiformes,Cariamidae,Cariama,Cariama cristata,Seriema,species
+Cathartes aura,4756,Aves,Animalia,Aves,Cathartiformes,Cathartidae,Cathartes,Cathartes aura,Buitre cabeza roja,species
+Cathartes aura ruficollis,509518,Aves,Animalia,Aves,Cathartiformes,Cathartidae,Cathartes,Cathartes aura,Gallinazo Cabeza Roja Tropocal,subspecies
+Cathartes burrovianus,4761,Aves,Animalia,Aves,Cathartiformes,Cathartidae,Cathartes,Cathartes burrovianus,Buitre cabeza amarilla,species
+Coragyps atratus,4765,Aves,Animalia,Aves,Cathartiformes,Cathartidae,Coragyps,Coragyps atratus,Buitre cabeza negra,species
+Charadrius collaris,4807,Aves,Animalia,Aves,Charadriiformes,Charadriidae,Charadrius,Charadrius collaris,Chorlito de collar,species
+Charadrius falklandicus,4816,Aves,Animalia,Aves,Charadriiformes,Charadriidae,Charadrius,Charadrius falklandicus,Chorlito doble collar,species
+Charadrius modestus,4809,Aves,Animalia,Aves,Charadriiformes,Charadriidae,Charadrius,Charadrius modestus,Chorlito pecho canela,species
+Charadrius semipalmatus,4817,Aves,Animalia,Aves,Charadriiformes,Charadriidae,Charadrius,Charadrius semipalmatus,Chorlito palmado,species
+Oreopholus ruficollis,4902,Aves,Animalia,Aves,Charadriiformes,Charadriidae,Oreopholus,Oreopholus ruficollis,Chorlo cabezón,species
+Pluvialis dominica,4893,Aves,Animalia,Aves,Charadriiformes,Charadriidae,Pluvialis,Pluvialis dominica,Chorlo pampa,species
+Pluvialis squatarola,4892,Aves,Animalia,Aves,Charadriiformes,Charadriidae,Pluvialis,Pluvialis squatarola,Chorlo gris,species
+Vanellus chilensis,4867,Aves,Animalia,Aves,Charadriiformes,Charadriidae,Vanellus,Vanellus chilensis,Tero,species
+Vanellus chilensis lampronotus,514142,Aves,Animalia,Aves,Charadriiformes,Charadriidae,Vanellus,Vanellus chilensis,,subspecies
+Chionis albus,72660,Aves,Animalia,Aves,Charadriiformes,Chionidae,Chionis,Chionis albus,Paloma antártica,species
+Haematopus ater,4852,Aves,Animalia,Aves,Charadriiformes,Haematopodidae,Haematopus,Haematopus ater,Ostrero negro,species
+Haematopus palliatus,4840,Aves,Animalia,Aves,Charadriiformes,Haematopodidae,Haematopus,Haematopus palliatus,Ostrero común,species
+Jacana jacana,4580,Aves,Animalia,Aves,Charadriiformes,Jacanidae,Jacana,Jacana jacana,Jacana,species
+Jacana jacana jacana,724989,Aves,Animalia,Aves,Charadriiformes,Jacanidae,Jacana,Jacana jacana,,subspecies
+Chroicocephalus cirrocephalus,144508,Aves,Animalia,Aves,Charadriiformes,Laridae,Chroicocephalus,Chroicocephalus cirrocephalus,Gaviota capucho gris,species
+Chroicocephalus maculipennis,144504,Aves,Animalia,Aves,Charadriiformes,Laridae,Chroicocephalus,Chroicocephalus maculipennis,Gaviota capucho café,species
+Larus atlanticus,4411,Aves,Animalia,Aves,Charadriiformes,Laridae,Larus,Larus atlanticus,Gaviota cangrejera,species
+Larus dominicanus,4388,Aves,Animalia,Aves,Charadriiformes,Laridae,Larus,Larus dominicanus,Gaviota cocinera,species
+Larus dominicanus dominicanus,333759,Aves,Animalia,Aves,Charadriiformes,Laridae,Larus,Larus dominicanus,Gaviota cocinera,subspecies
+Phaetusa simplex,4569,Aves,Animalia,Aves,Charadriiformes,Laridae,Phaetusa,Phaetusa simplex,Atí,species
+Rynchops niger,4496,Aves,Animalia,Aves,Charadriiformes,Laridae,Rynchops,Rynchops niger,Rayador,species
+Sterna hirundinacea,4454,Aves,Animalia,Aves,Charadriiformes,Laridae,Sterna,Sterna hirundinacea,Gaviotín sudamericano,species
+Sterna hirundo,4450,Aves,Animalia,Aves,Charadriiformes,Laridae,Sterna,Sterna hirundo,Gaviotín golondrina,species
+Sterna trudeaui,4425,Aves,Animalia,Aves,Charadriiformes,Laridae,Sterna,Sterna trudeaui,Gaviotín de antifaz,species
+Sternula superciliaris,144531,Aves,Animalia,Aves,Charadriiformes,Laridae,Sternula,Sternula superciliaris,Gaviotín chico,species
+Thalasseus maximus,144539,Aves,Animalia,Aves,Charadriiformes,Laridae,Thalasseus,Thalasseus maximus,Gaviotín real,species
+Thalasseus sandvicensis,144541,Aves,Animalia,Aves,Charadriiformes,Laridae,Thalasseus,Thalasseus sandvicensis,Gaviotín pico amarillo,species
+Thalasseus sandvicensis eurygnathus,546272,Aves,Animalia,Aves,Charadriiformes,Laridae,Thalasseus,Thalasseus sandvicensis,Gaviotín Pico Amarillo,subspecies
+Himantopus mexicanus,4836,Aves,Animalia,Aves,Charadriiformes,Recurvirostridae,Himantopus,Himantopus mexicanus,Tero real,species
+Himantopus mexicanus melanurus,464940,Aves,Animalia,Aves,Charadriiformes,Recurvirostridae,Himantopus,Himantopus mexicanus,Tero real,subspecies
+Nycticryphes semicollaris,144499,Aves,Animalia,Aves,Charadriiformes,Rostratulidae,Nycticryphes,Nycticryphes semicollaris,Aguatero,species
+Actitis macularius,72458,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Actitis,Actitis macularius,Playerito Manchado,species
+Arenaria interpres,3938,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Arenaria,Arenaria interpres,Vuelvepiedras,species
+Bartramia longicauda,3962,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Bartramia,Bartramia longicauda,Batitú,species
+Calidris alba,3849,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Calidris,Calidris alba,Playerito blanco,species
+Calidris bairdii,3851,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Calidris,Calidris bairdii,Playerito unicolor,species
+Calidris canutus,3845,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Calidris,Calidris canutus,Playero rojizo,species
+Calidris canutus rufa,236956,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Calidris,Calidris canutus,,subspecies
+Calidris fuscicollis,3866,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Calidris,Calidris fuscicollis,Playerito rabadilla blanca,species
+Calidris himantopus,3850,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Calidris,Calidris himantopus,Playero Zancudo,species
+Calidris melanotos,3865,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Calidris,Calidris melanotos,Playero pecho gris,species
+Calidris minutilla,3864,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Calidris,Calidris minutilla,Playero Diminuto,species
+Calidris subruficollis,339596,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Calidris,Calidris subruficollis,Playerito canela,species
+Gallinago paraguaiae,3927,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Gallinago,Gallinago paraguaiae,Becasina,species
+Limosa haemastica,3950,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Limosa,Limosa haemastica,Becasa de mar,species
+Numenius phaeopus,3901,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Numenius,Numenius phaeopus,Playero trinador,species
+Phalaropus tricolor,144497,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Phalaropus,Phalaropus tricolor,Falaropo común,species
+Tringa flavipes,3893,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Tringa,Tringa flavipes,Playero patas amarillas chico,species
+Tringa melanoleuca,3892,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Tringa,Tringa melanoleuca,Playero patas amarillas grande,species
+Tringa solitaria,3875,Aves,Animalia,Aves,Charadriiformes,Scolopacidae,Tringa,Tringa solitaria,Playero solitario,species
+Stercorarius antarcticus,339921,Aves,Animalia,Aves,Charadriiformes,Stercorariidae,Stercorarius,Stercorarius antarcticus,Escúa Antártica,species
+Stercorarius parasiticus,4489,Aves,Animalia,Aves,Charadriiformes,Stercorariidae,Stercorarius,Stercorarius parasiticus,Salteador chico,species
+Thinocorus rumicivorus,3779,Aves,Animalia,Aves,Charadriiformes,Thinocoridae,Thinocorus,Thinocorus rumicivorus,Agachona chica,species
+Ciconia maguari,4740,Aves,Animalia,Aves,Ciconiiformes,Ciconiidae,Ciconia,Ciconia maguari,Cigüeña,species
+Mycteria americana,4742,Aves,Animalia,Aves,Ciconiiformes,Ciconiidae,Mycteria,Mycteria americana,Cigüeña de cabeza pelada,species
+Columba livia,3017,Aves,Animalia,Aves,Columbiformes,Columbidae,Columba,Columba livia,Paloma doméstica,species
+Columba livia domestica,122767,Aves,Animalia,Aves,Columbiformes,Columbidae,Columba,Columba livia,Paloma doméstica,subspecies
+Columbina picui,3577,Aves,Animalia,Aves,Columbiformes,Columbidae,Columbina,Columbina picui,Torcacita,species
+Columbina picui picui,721787,Aves,Animalia,Aves,Columbiformes,Columbidae,Columbina,Columbina picui,,subspecies
+Columbina talpacoti,3580,Aves,Animalia,Aves,Columbiformes,Columbidae,Columbina,Columbina talpacoti,Torcacita colorada,species
+Geotrygon montana,3503,Aves,Animalia,Aves,Columbiformes,Columbidae,Geotrygon,Geotrygon montana,Paloma Canela,species
+Leptotila rufaxilla,3302,Aves,Animalia,Aves,Columbiformes,Columbidae,Leptotila,Leptotila rufaxilla,Paloma Montaraz Oscura,species
+Leptotila verreauxi,3280,Aves,Animalia,Aves,Columbiformes,Columbidae,Leptotila,Leptotila verreauxi,Paloma montaraz común,species
+Patagioenas cayennensis,3085,Aves,Animalia,Aves,Columbiformes,Columbidae,Patagioenas,Patagioenas cayennensis,Paloma colorada,species
+Patagioenas maculosa,3105,Aves,Animalia,Aves,Columbiformes,Columbidae,Patagioenas,Patagioenas maculosa,Paloma ala manchada,species
+Patagioenas maculosa maculosa,718711,Aves,Animalia,Aves,Columbiformes,Columbidae,Patagioenas,Patagioenas maculosa,,subspecies
+Patagioenas picazuro,3102,Aves,Animalia,Aves,Columbiformes,Columbidae,Patagioenas,Patagioenas picazuro,Paloma de monte,species
+Patagioenas picazuro picazuro,727762,Aves,Animalia,Aves,Columbiformes,Columbidae,Patagioenas,Patagioenas picazuro,,subspecies
+Zenaida auriculata,3439,Aves,Animalia,Aves,Columbiformes,Columbidae,Zenaida,Zenaida auriculata,Torcaza,species
+Chloroceryle amazona,2679,Aves,Animalia,Aves,Coraciiformes,Alcedinidae,Chloroceryle,Chloroceryle amazona,Martín pescador mediano,species
+Chloroceryle americana,2669,Aves,Animalia,Aves,Coraciiformes,Alcedinidae,Chloroceryle,Chloroceryle americana,Martín pescador chico,species
+Megaceryle torquata,2552,Aves,Animalia,Aves,Coraciiformes,Alcedinidae,Megaceryle,Megaceryle torquata,Martín pescador grande,species
+Coccycua cinerea,72739,Aves,Animalia,Aves,Cuculiformes,Cuculidae,Coccycua,Coccycua cinerea,Cuclillo Gris,species
+Coccyzus melacoryphus,1966,Aves,Animalia,Aves,Cuculiformes,Cuculidae,Coccyzus,Coccyzus melacoryphus,Cuclillo Común,species
+Crotophaga major,1970,Aves,Animalia,Aves,Cuculiformes,Cuculidae,Crotophaga,Crotophaga major,Pirincho Negro Grande,species
+Guira guira,1979,Aves,Animalia,Aves,Cuculiformes,Cuculidae,Guira,Guira guira,Pirincho,species
+Piaya cayana,1758,Aves,Animalia,Aves,Cuculiformes,Cuculidae,Piaya,Piaya cayana,Pirincho de monte,species
+Tapera naevia,1989,Aves,Animalia,Aves,Cuculiformes,Cuculidae,Tapera,Tapera naevia,Crespín,species
+Caracara plancus,4715,Aves,Animalia,Aves,Falconiformes,Falconidae,Caracara,Caracara plancus,Carancho,species
+Falco femoralis,4645,Aves,Animalia,Aves,Falconiformes,Falconidae,Falco,Falco femoralis,Halcón plomizo,species
+Falco peregrinus,4647,Aves,Animalia,Aves,Falconiformes,Falconidae,Falco,Falco peregrinus,Halcón peregrino,species
+Falco sparverius,4665,Aves,Animalia,Aves,Falconiformes,Falconidae,Falco,Falco sparverius,Halconcito,species
+Falco sparverius cinnamominus,515914,Aves,Animalia,Aves,Falconiformes,Falconidae,Falco,Falco sparverius,Cernícalo,subspecies
+Milvago chimachima,4726,Aves,Animalia,Aves,Falconiformes,Falconidae,Milvago,Milvago chimachima,Chimachimá,species
+Milvago chimango,4727,Aves,Animalia,Aves,Falconiformes,Falconidae,Milvago,Milvago chimango,Chimango,species
+Milvago chimango chimango,726301,Aves,Animalia,Aves,Falconiformes,Falconidae,Milvago,Milvago chimango,,subspecies
+Penelope obscura,2060,Aves,Animalia,Aves,Galliformes,Cracidae,Penelope,Penelope obscura,Pava de monte,species
+Numida meleagris,1428,Aves,Animalia,Aves,Galliformes,Numididae,Numida,Numida meleagris,Gallina de Guinea,species
+Aramus guarauna,7,Aves,Animalia,Aves,Gruiformes,Aramidae,Aramus,Aramus guarauna,Carao,species
+Aramus guarauna guarauna,709495,Aves,Animalia,Aves,Gruiformes,Aramidae,Aramus,Aramus guarauna,,subspecies
+Aramides cajaneus,513889,Aves,Animalia,Aves,Gruiformes,Rallidae,Aramides,Aramides cajaneus,Chiricote,species
+Aramides cajaneus cajaneus,513890,Aves,Animalia,Aves,Gruiformes,Rallidae,Aramides,Aramides cajaneus,,subspecies
+Aramides ypecaha,460,Aves,Animalia,Aves,Gruiformes,Rallidae,Aramides,Aramides ypecaha,Ipacaá,species
+Fulica armillata,488,Aves,Animalia,Aves,Gruiformes,Rallidae,Fulica,Fulica armillata,Gallareta grande,species
+Fulica leucoptera,486,Aves,Animalia,Aves,Gruiformes,Rallidae,Fulica,Fulica leucoptera,Gallareta ala blanca,species
+Fulica rufifrons,491,Aves,Animalia,Aves,Gruiformes,Rallidae,Fulica,Fulica rufifrons,Gallareta escudete rojo,species
+Gallinula galeata,144479,Aves,Animalia,Aves,Gruiformes,Rallidae,Gallinula,Gallinula galeata,Polla de agua,species
+Laterallus leucopyrrhus,332,Aves,Animalia,Aves,Gruiformes,Rallidae,Laterallus,Laterallus leucopyrrhus,Burrito Patas Rojas,species
+Laterallus melanophaius,329,Aves,Animalia,Aves,Gruiformes,Rallidae,Laterallus,Laterallus melanophaius,Burrito Patas Verdes,species
+Pardirallus sanguinolentus,290,Aves,Animalia,Aves,Gruiformes,Rallidae,Pardirallus,Pardirallus sanguinolentus,Gallineta común,species
+Porphyrio martinica,519,Aves,Animalia,Aves,Gruiformes,Rallidae,Porphyrio,Porphyrio martinica,Polla azul,species
+Porphyriops melanops,507881,Aves,Animalia,Aves,Gruiformes,Rallidae,Porphyriops,Porphyriops melanops,Polla pintada,species
+Cyanoloxia brissonii,558592,Aves,Animalia,Aves,Passeriformes,Cardinalidae,Cyanoloxia,Cyanoloxia brissonii,Reinamora,species
+Cyanoloxia glaucocaerulea,10690,Aves,Animalia,Aves,Passeriformes,Cardinalidae,Cyanoloxia,Cyanoloxia glaucocaerulea,Azulito,species
+Piranga flava,9924,Aves,Animalia,Aves,Passeriformes,Cardinalidae,Piranga,Piranga flava,Fueguero,species
+Conopophaga lineata,578313,Aves,Animalia,Aves,Passeriformes,Conopophagidae,Conopophaga,Conopophaga lineata,Chupadientes,species
+Cyanocorax chrysops,8484,Aves,Animalia,Aves,Passeriformes,Corvidae,Cyanocorax,Cyanocorax chrysops,Urraca común,species
+Phytotoma rutila,8898,Aves,Animalia,Aves,Passeriformes,Cotingidae,Phytotoma,Phytotoma rutila,Cortarramas,species
+Carduelis carduelis,9398,Aves,Animalia,Aves,Passeriformes,Fringillidae,Carduelis,Carduelis carduelis,Cardelino,species
+Chloris chloris,145360,Aves,Animalia,Aves,Passeriformes,Fringillidae,Chloris,Chloris chloris,Verderón,species
+Euphonia chlorotica,9292,Aves,Animalia,Aves,Passeriformes,Fringillidae,Euphonia,Euphonia chlorotica,Tangará Garganta Violácea,species
+Euphonia cyanocephala,9309,Aves,Animalia,Aves,Passeriformes,Fringillidae,Euphonia,Euphonia cyanocephala,Tangará cabeza celeste,species
+Spinus magellanicus,145316,Aves,Animalia,Aves,Passeriformes,Fringillidae,Spinus,Spinus magellanicus,Cabecitanegra,species
+Spinus magellanicus magellanicus,730519,Aves,Animalia,Aves,Passeriformes,Fringillidae,Spinus,Spinus magellanicus,,subspecies
+Anumbius annumbi,11850,Aves,Animalia,Aves,Passeriformes,Furnariidae,Anumbius,Anumbius annumbi,Espinero,species
+Asthenes baeri,11320,Aves,Animalia,Aves,Passeriformes,Furnariidae,Asthenes,Asthenes baeri,Canastero común,species
+Certhiaxis cinnamomeus,11364,Aves,Animalia,Aves,Passeriformes,Furnariidae,Certhiaxis,Certhiaxis cinnamomeus,Curutié colorado,species
+Cinclodes fuscus,11397,Aves,Animalia,Aves,Passeriformes,Furnariidae,Cinclodes,Cinclodes fuscus,Remolinera,species
+Coryphistera alaudina,11837,Aves,Animalia,Aves,Passeriformes,Furnariidae,Coryphistera,Coryphistera alaudina,Crestudo,species
+Cranioleuca pyrrhophia,11266,Aves,Animalia,Aves,Passeriformes,Furnariidae,Cranioleuca,Cranioleuca pyrrhophia,Trepadorcito,species
+Dendrocolaptes platyrostris,11122,Aves,Animalia,Aves,Passeriformes,Furnariidae,Dendrocolaptes,Dendrocolaptes platyrostris,Trepador oscuro,species
+Drymornis bridgesii,11831,Aves,Animalia,Aves,Passeriformes,Furnariidae,Drymornis,Drymornis bridgesii,Trepador grande,species
+Furnarius rufus,11275,Aves,Animalia,Aves,Passeriformes,Furnariidae,Furnarius,Furnarius rufus,Hornero,species
+Furnarius rufus rufus,723870,Aves,Animalia,Aves,Passeriformes,Furnariidae,Furnarius,Furnarius rufus,,subspecies
+Geositta cunicularia,10758,Aves,Animalia,Aves,Passeriformes,Furnariidae,Geositta,Geositta cunicularia,Caminera,species
+Heliobletus contaminatus,11780,Aves,Animalia,Aves,Passeriformes,Furnariidae,Heliobletus,Heliobletus contaminatus,Picolezna estriado,species
+Lepidocolaptes angustirostris,11589,Aves,Animalia,Aves,Passeriformes,Furnariidae,Lepidocolaptes,Lepidocolaptes angustirostris,Trepador chico,species
+Lepidocolaptes falcinellus,11579,Aves,Animalia,Aves,Passeriformes,Furnariidae,Lepidocolaptes,Lepidocolaptes falcinellus,Trepador escamado,species
+Leptasthenura platensis,11688,Aves,Animalia,Aves,Passeriformes,Furnariidae,Leptasthenura,Leptasthenura platensis,Coludito copetón,species
+Limnoctites rectirostris,72986,Aves,Animalia,Aves,Passeriformes,Furnariidae,Limnoctites,Limnoctites rectirostris,Pajonalera pico recto,species
+Limnoctites sulphuriferus,979789,Aves,Animalia,Aves,Passeriformes,Furnariidae,Limnoctites,Limnoctites sulphuriferus,Curutié ocráceo,species
+Limnornis curvirostris,11806,Aves,Animalia,Aves,Passeriformes,Furnariidae,Limnornis,Limnornis curvirostris,Pajonalera pico curvo,species
+Lochmias nematura,11114,Aves,Animalia,Aves,Passeriformes,Furnariidae,Lochmias,Lochmias nematura,Macuquito,species
+Phacellodomus ferrugineigula,73181,Aves,Animalia,Aves,Passeriformes,Furnariidae,Phacellodomus,Phacellodomus ferrugineigula,Tiotío ojo rojo,species
+Phacellodomus ruber,11632,Aves,Animalia,Aves,Passeriformes,Furnariidae,Phacellodomus,Phacellodomus ruber,Tiotío Grande,species
+Phacellodomus sibilatrix,11620,Aves,Animalia,Aves,Passeriformes,Furnariidae,Phacellodomus,Phacellodomus sibilatrix,Espinero chico,species
+Phacellodomus striaticollis,11617,Aves,Animalia,Aves,Passeriformes,Furnariidae,Phacellodomus,Phacellodomus striaticollis,Tiotío común,species
+Phleocryptes melanops,11812,Aves,Animalia,Aves,Passeriformes,Furnariidae,Phleocryptes,Phleocryptes melanops,Junquero,species
+Pseudoseisura lophotes,11719,Aves,Animalia,Aves,Passeriformes,Furnariidae,Pseudoseisura,Pseudoseisura lophotes,Hornerón,species
+Schoeniophylax phryganophilus,11821,Aves,Animalia,Aves,Passeriformes,Furnariidae,Schoeniophylax,Schoeniophylax phryganophilus,Chotoy,species
+Sittasomus griseicapillus,11511,Aves,Animalia,Aves,Passeriformes,Furnariidae,Sittasomus,Sittasomus griseicapillus,Tarefero,species
+Spartonoica maluroides,11810,Aves,Animalia,Aves,Passeriformes,Furnariidae,Spartonoica,Spartonoica maluroides,Espartillero enano,species
+Synallaxis albescens,10999,Aves,Animalia,Aves,Passeriformes,Furnariidae,Synallaxis,Synallaxis albescens,Pijuí Blancuzco,species
+Synallaxis frontalis,10996,Aves,Animalia,Aves,Passeriformes,Furnariidae,Synallaxis,Synallaxis frontalis,Pijuí frente gris,species
+Synallaxis spixi,10915,Aves,Animalia,Aves,Passeriformes,Furnariidae,Synallaxis,Synallaxis spixi,Pijuí común,species
+Syndactyla rufosuperciliata,11472,Aves,Animalia,Aves,Passeriformes,Furnariidae,Syndactyla,Syndactyla rufosuperciliata,Titirí,species
+Alopochelidon fucata,72485,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Alopochelidon,Alopochelidon fucata,Golondrina cabeza rojiza,species
+Hirundo rustica,11901,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Hirundo,Hirundo rustica,Golondrina tijereta,species
+Petrochelidon pyrrhonota,11858,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Petrochelidon,Petrochelidon pyrrhonota,Golondrina rabadilla canela,species
+Progne chalybea,11872,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Progne,Progne chalybea,Golondrina azul grande,species
+Progne chalybea macrorhamphus,729194,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Progne,Progne chalybea,,subspecies
+Progne elegans,11866,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Progne,Progne elegans,Golondrina negra,species
+Progne tapera,11870,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Progne,Progne tapera,Golondrina parda,species
+Progne tapera fusca,718816,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Progne,Progne tapera,,subspecies
+Pygochelidon cyanoleuca,68826,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Pygochelidon,Pygochelidon cyanoleuca,Golondrina azul chica,species
+Riparia riparia,11941,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Riparia,Riparia riparia,Golondrina Parda Chica,species
+Stelgidopteryx ruficollis,11972,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Stelgidopteryx,Stelgidopteryx ruficollis,Golondrina cuello canela,species
+Tachycineta leucopyga,558526,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Tachycineta,Tachycineta leucopyga,Golondrina patagónica,species
+Tachycineta leucorrhoa,11936,Aves,Animalia,Aves,Passeriformes,Hirundinidae,Tachycineta,Tachycineta leucorrhoa,Golondrina ceja blanca,species
+Agelaioides badius,516244,Aves,Animalia,Aves,Passeriformes,Icteridae,Agelaioides,Agelaioides badius,Tordo músico,species
+Agelasticus cyanopus,72471,Aves,Animalia,Aves,Passeriformes,Icteridae,Agelasticus,Agelasticus cyanopus,Varillero negro,species
+Agelasticus thilius,72472,Aves,Animalia,Aves,Passeriformes,Icteridae,Agelasticus,Agelasticus thilius,Alférez,species
+Amblyramphus holosericeus,10694,Aves,Animalia,Aves,Passeriformes,Icteridae,Amblyramphus,Amblyramphus holosericeus,Federal,species
+Cacicus chrysopterus,10361,Aves,Animalia,Aves,Passeriformes,Icteridae,Cacicus,Cacicus chrysopterus,Boyero ala amarilla,species
+Cacicus haemorrhous,10357,Aves,Animalia,Aves,Passeriformes,Icteridae,Cacicus,Cacicus haemorrhous,Boyero cacique,species
+Cacicus solitarius,10365,Aves,Animalia,Aves,Passeriformes,Icteridae,Cacicus,Cacicus solitarius,Boyero negro,species
+Chrysomus ruficapillus,69696,Aves,Animalia,Aves,Passeriformes,Icteridae,Chrysomus,Chrysomus ruficapillus,Garibaldino,species
+Gnorimopsar chopi,10723,Aves,Animalia,Aves,Passeriformes,Icteridae,Gnorimopsar,Gnorimopsar chopi,Mirlo charrúa,species
+Icterus pyrrhopterus,72954,Aves,Animalia,Aves,Passeriformes,Icteridae,Icterus,Icterus pyrrhopterus,Boyerito,species
+Leistes defilippii,793312,Aves,Animalia,Aves,Passeriformes,Icteridae,Leistes,Leistes defilippii,Loica pampeana,species
+Leistes superciliaris,793309,Aves,Animalia,Aves,Passeriformes,Icteridae,Leistes,Leistes superciliaris,Pecho colorado,species
+Molothrus bonariensis,10371,Aves,Animalia,Aves,Passeriformes,Icteridae,Molothrus,Molothrus bonariensis,Tordo común,species
+Molothrus bonariensis bonariensis,726431,Aves,Animalia,Aves,Passeriformes,Icteridae,Molothrus,Molothrus bonariensis,,subspecies
+Molothrus rufoaxillaris,10370,Aves,Animalia,Aves,Passeriformes,Icteridae,Molothrus,Molothrus rufoaxillaris,Tordo pico corto,species
+Pseudoleistes guirahuro,10709,Aves,Animalia,Aves,Passeriformes,Icteridae,Pseudoleistes,Pseudoleistes guirahuro,Canario de la Sierra,species
+Pseudoleistes virescens,10708,Aves,Animalia,Aves,Passeriformes,Icteridae,Pseudoleistes,Pseudoleistes virescens,Pecho amarillo,species
+Xanthopsar flavus,69686,Aves,Animalia,Aves,Passeriformes,Icteridae,Xanthopsar,Xanthopsar flavus,Dragón,species
+Mimus saturninus,14878,Aves,Animalia,Aves,Passeriformes,Mimidae,Mimus,Mimus saturninus,Calandria,species
+Mimus saturninus modulator,726316,Aves,Animalia,Aves,Passeriformes,Mimidae,Mimus,Mimus saturninus,,subspecies
+Mimus triurus,14885,Aves,Animalia,Aves,Passeriformes,Mimidae,Mimus,Mimus triurus,Calandria Tres Colas,species
+Anthus correndera,13725,Aves,Animalia,Aves,Passeriformes,Motacillidae,Anthus,Anthus correndera,Cachirla uña larga,species
+Anthus furcatus,13757,Aves,Animalia,Aves,Passeriformes,Motacillidae,Anthus,Anthus furcatus,Cachirla uña corta,species
+Anthus hellmayri,13742,Aves,Animalia,Aves,Passeriformes,Motacillidae,Anthus,Anthus hellmayri,Cachirla pálida,species
+Anthus lutescens,13707,Aves,Animalia,Aves,Passeriformes,Motacillidae,Anthus,Anthus lutescens,Cachirla chica,species
+Basileuterus culicivorus,10023,Aves,Animalia,Aves,Passeriformes,Parulidae,Basileuterus,Basileuterus culicivorus,Arañero chico,species
+Geothlypis aequinoctialis,9739,Aves,Animalia,Aves,Passeriformes,Parulidae,Geothlypis,Geothlypis aequinoctialis,Arañero cara negra,species
+Myiothlypis leucoblephara,201224,Aves,Animalia,Aves,Passeriformes,Parulidae,Myiothlypis,Myiothlypis leucoblephara,Arañero Oliváceo,species
+Setophaga pitiayumi,145234,Aves,Animalia,Aves,Passeriformes,Parulidae,Setophaga,Setophaga pitiayumi,Pitiayumi,species
+Setophaga pitiayumi pitiayumi,730320,Aves,Animalia,Aves,Passeriformes,Parulidae,Setophaga,Setophaga pitiayumi,,subspecies
+Ammodramus humeralis,10134,Aves,Animalia,Aves,Passeriformes,Passerellidae,Ammodramus,Ammodramus humeralis,Chingolo ceja amarilla,species
+Zonotrichia capensis,9183,Aves,Animalia,Aves,Passeriformes,Passerellidae,Zonotrichia,Zonotrichia capensis,Chingolo,species
+Passer domesticus,13858,Aves,Animalia,Aves,Passeriformes,Passeridae,Passer,Passer domesticus,Gorrión,species
+Passer domesticus domesticus,544795,Aves,Animalia,Aves,Passeriformes,Passeridae,Passer,Passer domesticus,Gorrión Doméstico Europeo,subspecies
+Polioptila dumicola,7509,Aves,Animalia,Aves,Passeriformes,Polioptilidae,Polioptila,Polioptila dumicola,Tacuarita azul,species
+Sturnus vulgaris,14850,Aves,Animalia,Aves,Passeriformes,Sturnidae,Sturnus,Sturnus vulgaris,Estornino pinto,species
+Mackenziaena leachii,15857,Aves,Animalia,Aves,Passeriformes,Thamnophilidae,Mackenziaena,Mackenziaena leachii,Batará pintado,species
+Thamnophilus caerulescens,15757,Aves,Animalia,Aves,Passeriformes,Thamnophilidae,Thamnophilus,Thamnophilus caerulescens,Batará  plomizo,species
+Thamnophilus ruficapillus,15758,Aves,Animalia,Aves,Passeriformes,Thamnophilidae,Thamnophilus,Thamnophilus ruficapillus,Batará pardo,species
+Coereba flaveola,10199,Aves,Animalia,Aves,Passeriformes,Thraupidae,Coereba,Coereba flaveola,Mielero,species
+Coryphospingus cucullatus,10310,Aves,Animalia,Aves,Passeriformes,Thraupidae,Coryphospingus,Coryphospingus cucullatus,Brasita de fuego,species
+Donacospiza albifrons,10715,Aves,Animalia,Aves,Passeriformes,Thraupidae,Donacospiza,Donacospiza albifrons,Monterita cabeza gris,species
+Emberizoides herbicola,10556,Aves,Animalia,Aves,Passeriformes,Thraupidae,Emberizoides,Emberizoides herbicola,Coludo grande,species
+Emberizoides ypiranganus,10555,Aves,Animalia,Aves,Passeriformes,Thraupidae,Emberizoides,Emberizoides ypiranganus,Coludo chico,species
+Embernagra platensis,10670,Aves,Animalia,Aves,Passeriformes,Thraupidae,Embernagra,Embernagra platensis,Verdón,species
+Embernagra platensis platensis,718346,Aves,Animalia,Aves,Passeriformes,Thraupidae,Embernagra,Embernagra platensis,,subspecies
+Gubernatrix cristata,10717,Aves,Animalia,Aves,Passeriformes,Thraupidae,Gubernatrix,Gubernatrix cristata,Cardenal amarillo,species
+Hemithraupis ruficapilla,10304,Aves,Animalia,Aves,Passeriformes,Thraupidae,Hemithraupis,Hemithraupis ruficapilla,pintasilgo de cabeza rufa,species
+Microspingus cabanisi,558562,Aves,Animalia,Aves,Passeriformes,Thraupidae,Microspingus,Microspingus cabanisi,Monterita rabadilla roja,species
+Microspingus melanoleucus,558564,Aves,Animalia,Aves,Passeriformes,Thraupidae,Microspingus,Microspingus melanoleucus,Monterita cabeza negra,species
+Paroaria capitata,10257,Aves,Animalia,Aves,Passeriformes,Thraupidae,Paroaria,Paroaria capitata,Cardenilla,species
+Paroaria coronata,10254,Aves,Animalia,Aves,Passeriformes,Thraupidae,Paroaria,Paroaria coronata,Cardenal copete rojo,species
+Pipraeidea bonariensis,339889,Aves,Animalia,Aves,Passeriformes,Thraupidae,Pipraeidea,Pipraeidea bonariensis,Naranjero,species
+Pipraeidea melanonota,10711,Aves,Animalia,Aves,Passeriformes,Thraupidae,Pipraeidea,Pipraeidea melanonota,Viuva,species
+Poospiza nigrorufa,890970,Aves,Animalia,Aves,Passeriformes,Thraupidae,Poospiza,Poospiza nigrorufa,Sietevestidos,species
+Saltator aurantiirostris,9847,Aves,Animalia,Aves,Passeriformes,Thraupidae,Saltator,Saltator aurantiirostris,Rey del bosque,species
+Saltator coerulescens,9850,Aves,Animalia,Aves,Passeriformes,Thraupidae,Saltator,Saltator coerulescens,Rey del Bosque Gris,species
+Saltator similis,9861,Aves,Animalia,Aves,Passeriformes,Thraupidae,Saltator,Saltator similis,Rey del bosque verdoso,species
+Sicalis flaveola,9864,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sicalis,Sicalis flaveola,Dorado,species
+Sicalis flaveola pelzelni,718938,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sicalis,Sicalis flaveola,,subspecies
+Sicalis luteola,9869,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sicalis,Sicalis luteola,Misto,species
+Sporophila caerulescens,9517,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sporophila,Sporophila caerulescens,Corbatita,species
+Sporophila cinnamomea,9495,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sporophila,Sporophila cinnamomea,Capuchino corona gris,species
+Sporophila collaris,9516,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sporophila,Sporophila collaris,Dominó,species
+Sporophila hypochroma,9505,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sporophila,Sporophila hypochroma,Capuchino castaño,species
+Sporophila hypoxantha,9488,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sporophila,Sporophila hypoxantha,Capuchino canela,species
+Sporophila palustris,9506,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sporophila,Sporophila palustris,Capuchino pecho blanco,species
+Sporophila ruficollis,9497,Aves,Animalia,Aves,Passeriformes,Thraupidae,Sporophila,Sporophila ruficollis,Capuchino garganta café,species
+Stephanophorus diadematus,10706,Aves,Animalia,Aves,Passeriformes,Thraupidae,Stephanophorus,Stephanophorus diadematus,Cardenal azul,species
+Stilpnia preciosa,979964,Aves,Animalia,Aves,Passeriformes,Thraupidae,Stilpnia,Stilpnia preciosa,Achará,species
+Thraupis sayaca,10293,Aves,Animalia,Aves,Passeriformes,Thraupidae,Thraupis,Thraupis sayaca,Celestón,species
+Volatinia jacarina,10288,Aves,Animalia,Aves,Passeriformes,Thraupidae,Volatinia,Volatinia jacarina,Volatinero,species
+Pachyramphus polychopterus,8716,Aves,Animalia,Aves,Passeriformes,Tityridae,Pachyramphus,Pachyramphus polychopterus,Anambé negro,species
+Pachyramphus validus,8681,Aves,Animalia,Aves,Passeriformes,Tityridae,Pachyramphus,Pachyramphus validus,Anambé grande,species
+Pachyramphus viridis,8711,Aves,Animalia,Aves,Passeriformes,Tityridae,Pachyramphus,Pachyramphus viridis,Anambé verdoso,species
+Cistothorus platensis,7596,Aves,Animalia,Aves,Passeriformes,Troglodytidae,Cistothorus,Cistothorus platensis,Ratonera aperdizada,species
+Troglodytes aedon,7562,Aves,Animalia,Aves,Passeriformes,Troglodytidae,Troglodytes,Troglodytes aedon,Ratonera,species
+Turdus albicollis,12746,Aves,Animalia,Aves,Passeriformes,Turdidae,Turdus,Turdus albicollis,Zorzal collar blanco,species
+Turdus amaurochalinus,12710,Aves,Animalia,Aves,Passeriformes,Turdidae,Turdus,Turdus amaurochalinus,Sabiá,species
+Turdus fulviventris,12721,Aves,Animalia,Aves,Passeriformes,Turdidae,Turdus,Turdus fulviventris,Zorzal ventricastaño,species
+Turdus leucomelas,12737,Aves,Animalia,Aves,Passeriformes,Turdidae,Turdus,Turdus leucomelas,Sabiá Misionero,species
+Turdus rufiventris,12738,Aves,Animalia,Aves,Passeriformes,Turdidae,Turdus,Turdus rufiventris,Zorzal común,species
+Turdus subalaris,827407,Aves,Animalia,Aves,Passeriformes,Turdidae,Turdus,Turdus subalaris,Zorzal Herrero,species
+Camptostoma obsoletum,16972,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Camptostoma,Camptostoma obsoletum,Piojito silbón,species
+Elaenia albiceps,16686,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Elaenia,Elaenia albiceps,Fiofío silbón,species
+Elaenia mesoleuca,16694,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Elaenia,Elaenia mesoleuca,Fiofío oliváceo,species
+Elaenia parvirostris,16733,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Elaenia,Elaenia parvirostris,Fiofí­o común,species
+Elaenia sordida,979710,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Elaenia,Elaenia sordida,Fiofio paranaense,species
+Elaenia spectabilis,16734,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Elaenia,Elaenia spectabilis,Fiofío grande,species
+Empidonomus aurantioatrocristatus,17057,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Empidonomus,Empidonomus aurantioatrocristatus,Tuquito gris,species
+Empidonomus varius,17060,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Empidonomus,Empidonomus varius,Tuquito rayado,species
+Euscarthmus meloryphus,16396,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Euscarthmus,Euscarthmus meloryphus,Barullero,species
+Fluvicola albiventer,72862,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Fluvicola,Fluvicola albiventer,Lavandera Blanca,species
+Gubernetes yetapa,17347,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Gubernetes,Gubernetes yetapa,Yetapá grande,species
+Hemitriccus margaritaceiventer,16273,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Hemitriccus,Hemitriccus margaritaceiventer,Mosqueta ojo dorado,species
+Hirundinea ferruginea,17180,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Hirundinea,Hirundinea ferruginea,Viudita colorada,species
+Hymenops perspicillatus,17253,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Hymenops,Hymenops perspicillatus,Pico de plata,species
+Knipolegus cyanirostris,16828,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Knipolegus,Knipolegus cyanirostris,Viudita negra común,species
+Knipolegus lophotes,16818,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Knipolegus,Knipolegus lophotes,Viudita negra copetona,species
+Lathrotriccus euleri,17231,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Lathrotriccus,Lathrotriccus euleri,Mosqueta de Monte,species
+Leptopogon amaurocephalus,16371,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Leptopogon,Leptopogon amaurocephalus,Mosquerito Gorra Café,species
+Lessonia rufa,17310,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Lessonia,Lessonia rufa,Sobrepuesto,species
+Machetornis rixosa,17289,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Machetornis,Machetornis rixosa,Picabuey,species
+Muscisaxicola albilora,16159,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Muscisaxicola,Muscisaxicola albilora,Dormilona ceja blanca,species
+Muscisaxicola maclovianus,16156,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Muscisaxicola,Muscisaxicola maclovianus,Dormilona cara negra,species
+Myiarchus swainsoni,16029,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Myiarchus,Myiarchus swainsoni,Burlisto común,species
+Myiarchus tyrannulus,16016,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Myiarchus,Myiarchus tyrannulus,Burlisto cola castaña,species
+Myiodynastes maculatus,16063,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Myiodynastes,Myiodynastes maculatus,Benteveo rayado,species
+Myiophobus fasciatus,16862,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Myiophobus,Myiophobus fasciatus,Mosqueta estriada,species
+Neoxolmis rufiventris,17353,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Neoxolmis,Neoxolmis rufiventris,Viudita chocolate,species
+Phylloscartes ventralis,16948,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Phylloscartes,Phylloscartes ventralis,Ligerito,species
+Pitangus sulphuratus,16956,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Pitangus,Pitangus sulphuratus,Benteveo,species
+Pitangus sulphuratus argentinus,728688,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Pitangus,Pitangus sulphuratus,,subspecies
+Poecilotriccus plumbeiceps,17050,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Poecilotriccus,Poecilotriccus plumbeiceps,Mosqueta cabeza canela,species
+Polystictus pectoralis,17119,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Polystictus,Polystictus pectoralis,Tachurí canela,species
+Pseudocolopteryx flaviventris,16594,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Pseudocolopteryx,Pseudocolopteryx flaviventris,Piojito Amarillo,species
+Pseudocolopteryx sclateri,16595,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Pseudocolopteryx,Pseudocolopteryx sclateri,Piojito Copetón,species
+Pyrocephalus rubinus,16447,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Pyrocephalus,Pyrocephalus rubinus,Churrinche,species
+Pyrocephalus rubinus rubinus,718859,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Pyrocephalus,Pyrocephalus rubinus,Churrinche sudamericano,subspecies
+Satrapa icterophrys,17345,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Satrapa,Satrapa icterophrys,Vinchero,species
+Serpophaga griseicapilla,372353,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Serpophaga,Serpophaga griseicapilla,Piojito trinador,species
+Serpophaga nigricans,17210,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Serpophaga,Serpophaga nigricans,Piojito gris,species
+Serpophaga subcristata,17211,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Serpophaga,Serpophaga subcristata,Piojito común,species
+Sublegatus modestus,17064,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Sublegatus,Sublegatus modestus,Suirirí Copetón,species
+Suiriri suiriri,17197,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Suiriri,Suiriri suiriri,Suirirí común,species
+Tachuris rubrigastra,17174,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Tachuris,Tachuris rubrigastra,Sietecolores de laguna,species
+Tolmomyias sulphurescens,16567,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Tolmomyias,Tolmomyias sulphurescens,Picochato grande,species
+Tyrannus melancholicus,16787,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Tyrannus,Tyrannus melancholicus,Benteveo real,species
+Tyrannus melancholicus melancholicus,732074,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Tyrannus,Tyrannus melancholicus,Pepite,subspecies
+Tyrannus savana,16793,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Tyrannus,Tyrannus savana,Tijereta,species
+Tyrannus savana savana,566972,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Tyrannus,Tyrannus savana,,subspecies
+Tyrannus tyrannus,16782,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Tyrannus,Tyrannus tyrannus,Tirano dorso negro,species
+Xolmis cinereus,16131,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Xolmis,Xolmis cinereus,Escarchero,species
+Xolmis cinereus cinereus,732384,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Xolmis,Xolmis cinereus,,subspecies
+Xolmis coronatus,16130,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Xolmis,Xolmis coronatus,Viudita Coronada,species
+Xolmis dominicanus,73563,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Xolmis,Xolmis dominicanus,Viudita blanca grande,species
+Xolmis irupero,16134,Aves,Animalia,Aves,Passeriformes,Tyrannidae,Xolmis,Xolmis irupero,Viudita blanca chica,species
+Cyclarhis gujanensis,17421,Aves,Animalia,Aves,Passeriformes,Vireonidae,Cyclarhis,Cyclarhis gujanensis,Juan chiviro,species
+Vireo chivi,827395,Aves,Animalia,Aves,Passeriformes,Vireonidae,Vireo,Vireo chivi,Chiví,species
+Ardea alba,144455,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Ardea,Ardea alba,Garza blanca grande,species
+Ardea alba egretta,236942,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Ardea,Ardea alba,,subspecies
+Ardea cocoi,4952,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Ardea,Ardea cocoi,Garza mora,species
+Botaurus pinnatus,5031,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Botaurus,Botaurus pinnatus,Mirasol grande,species
+Bubulcus ibis,5017,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Bubulcus,Bubulcus ibis,Garza bueyera,species
+Butorides striata,62528,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Butorides,Butorides striata,Garcita azulada,species
+Egretta caerulea,4937,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Egretta,Egretta caerulea,Garza azul,species
+Egretta thula,4940,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Egretta,Egretta thula,Garza blanca chica,species
+Egretta thula thula,555704,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Egretta,Egretta thula,,subspecies
+Ixobrychus involucris,5013,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Ixobrychus,Ixobrychus involucris,Mirasol Chico,species
+Nycticorax nycticorax,4981,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Nycticorax,Nycticorax nycticorax,Garza bruja,species
+Syrigma sibilatrix,5056,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Syrigma,Syrigma sibilatrix,Chiflón,species
+Tigrisoma lineatum,5048,Aves,Animalia,Aves,Pelecaniformes,Ardeidae,Tigrisoma,Tigrisoma lineatum,Garza colorada,species
+Phimosus infuscatus,3736,Aves,Animalia,Aves,Pelecaniformes,Threskiornithidae,Phimosus,Phimosus infuscatus,Cuervillo cara pelada,species
+Platalea ajaja,62529,Aves,Animalia,Aves,Pelecaniformes,Threskiornithidae,Platalea,Platalea ajaja,Espátula rosada,species
+Plegadis chihi,3759,Aves,Animalia,Aves,Pelecaniformes,Threskiornithidae,Plegadis,Plegadis chihi,Cuervillo de cañada,species
+Theristicus caerulescens,3768,Aves,Animalia,Aves,Pelecaniformes,Threskiornithidae,Theristicus,Theristicus caerulescens,Bandurria mora,species
+Theristicus caudatus,3766,Aves,Animalia,Aves,Pelecaniformes,Threskiornithidae,Theristicus,Theristicus caudatus,Bandurria baya,species
+Phoenicopterus chilensis,4258,Aves,Animalia,Aves,Phoenicopteriformes,Phoenicopteridae,Phoenicopterus,Phoenicopterus chilensis,Flamenco,species
+Campephilus leucopogon,18282,Aves,Animalia,Aves,Piciformes,Picidae,Campephilus,Campephilus leucopogon,Carpintero Negro,species
+Colaptes campestris,18262,Aves,Animalia,Aves,Piciformes,Picidae,Colaptes,Colaptes campestris,Carpintero de campo,species
+Colaptes campestris campestroides,512716,Aves,Animalia,Aves,Piciformes,Picidae,Colaptes,Colaptes campestris,carpintero campestre,subspecies
+Colaptes melanochloros,18250,Aves,Animalia,Aves,Piciformes,Picidae,Colaptes,Colaptes melanochloros,Carpintero nuca roja,species
+Colaptes melanochloros melanolaimus,425116,Aves,Animalia,Aves,Piciformes,Picidae,Colaptes,Colaptes melanochloros,,subspecies
+Dryobates mixtus,793081,Aves,Animalia,Aves,Piciformes,Picidae,Dryobates,Dryobates mixtus,Carpintero bataraz,species
+Dryobates spilogaster,793073,Aves,Animalia,Aves,Piciformes,Picidae,Dryobates,Dryobates spilogaster,Carpinterito manchado,species
+Melanerpes cactorum,18166,Aves,Animalia,Aves,Piciformes,Picidae,Melanerpes,Melanerpes cactorum,Carpintero del cardón,species
+Melanerpes candidus,18183,Aves,Animalia,Aves,Piciformes,Picidae,Melanerpes,Melanerpes candidus,Carpintero blanco,species
+Picumnus cirratus,17827,Aves,Animalia,Aves,Piciformes,Picidae,Picumnus,Picumnus cirratus,Carpinterito chaqueño,species
+Picumnus nebulosus,17759,Aves,Animalia,Aves,Piciformes,Picidae,Picumnus,Picumnus nebulosus,Carpinterito enano,species
+Ramphastos toco,18793,Aves,Animalia,Aves,Piciformes,Ramphastidae,Ramphastos,Ramphastos toco,Tucán grande,species
+Podiceps major,4229,Aves,Animalia,Aves,Podicipediformes,Podicipedidae,Podiceps,Podiceps major,Macá grande,species
+Podiceps occipitalis,4227,Aves,Animalia,Aves,Podicipediformes,Podicipedidae,Podiceps,Podiceps occipitalis,Macá plateado,species
+Podilymbus podiceps,4246,Aves,Animalia,Aves,Podicipediformes,Podicipedidae,Podilymbus,Podilymbus podiceps,Macá pico grueso,species
+Rollandia rolland,4251,Aves,Animalia,Aves,Podicipediformes,Podicipedidae,Rollandia,Rollandia rolland,Macá común,species
+Tachybaptus dominicus,4239,Aves,Animalia,Aves,Podicipediformes,Podicipedidae,Tachybaptus,Tachybaptus dominicus,Macá gris,species
+Diomedea epomophora,508987,Aves,Animalia,Aves,Procellariiformes,Diomedeidae,Diomedea,Diomedea epomophora,Albatros real,species
+Thalassarche chlororhynchos,4091,Aves,Animalia,Aves,Procellariiformes,Diomedeidae,Thalassarche,Thalassarche chlororhynchos,Albatros pico fino,species
+Thalassarche melanophris,144433,Aves,Animalia,Aves,Procellariiformes,Diomedeidae,Thalassarche,Thalassarche melanophris,Albatros ceja negra,species
+Ardenna gravis,475120,Aves,Animalia,Aves,Procellariiformes,Procellariidae,Ardenna,Ardenna gravis,Pardela cabeza negra,species
+Ardenna grisea,502899,Aves,Animalia,Aves,Procellariiformes,Procellariidae,Ardenna,Ardenna grisea,Pardela oscura,species
+Macronectes giganteus,4198,Aves,Animalia,Aves,Procellariiformes,Procellariidae,Macronectes,Macronectes giganteus,Petrel gigante común,species
+Macronectes halli,4197,Aves,Animalia,Aves,Procellariiformes,Procellariidae,Macronectes,Macronectes halli,Petrel gigante oscuro,species
+Pachyptila belcheri,4163,Aves,Animalia,Aves,Procellariiformes,Procellariidae,Pachyptila,Pachyptila belcheri,Prión pico fino,species
+Procellaria aequinoctialis,4136,Aves,Animalia,Aves,Procellariiformes,Procellariidae,Procellaria,Procellaria aequinoctialis,Petrel barba blanca,species
+Puffinus puffinus,4093,Aves,Animalia,Aves,Procellariiformes,Procellariidae,Puffinus,Puffinus puffinus,Pardela boreal,species
+Amazona aestiva,18978,Aves,Animalia,Aves,Psittaciformes,Psittacidae,Amazona,Amazona aestiva,Loro de frente azul,species
+Brotogeris chiriri,19215,Aves,Animalia,Aves,Psittaciformes,Psittacidae,Brotogeris,Brotogeris chiriri,Chirirí,species
+Myiopsitta monachus,19349,Aves,Animalia,Aves,Psittaciformes,Psittacidae,Myiopsitta,Myiopsitta monachus,Cotorra,species
+Myiopsitta monachus monachus,726681,Aves,Animalia,Aves,Psittaciformes,Psittacidae,Myiopsitta,Myiopsitta monachus,,subspecies
+Psittacara leucophthalmus,367573,Aves,Animalia,Aves,Psittaciformes,Psittacidae,Psittacara,Psittacara leucophthalmus,Loro Maracaná,species
+Pyrrhura frontalis,19162,Aves,Animalia,Aves,Psittaciformes,Psittacidae,Pyrrhura,Pyrrhura frontalis,Chiripepé,species
+Agapornis personatus,19076,Aves,Animalia,Aves,Psittaciformes,Psittaculidae,Agapornis,Agapornis personatus,Periquito del amor Enmascarado,species
+Melopsittacus undulatus (domestic type),507971,Aves,Animalia,Aves,Psittaciformes,Psittaculidae,Melopsittacus,Melopsittacus undulatus,Periquito Australiano Doméstico,subspecies
+Rhea americana,20512,Aves,Animalia,Aves,Rheiformes,Rheidae,Rhea,Rhea americana,Ñandú,species
+Eudyptes chrysolophus,3825,Aves,Animalia,Aves,Sphenisciformes,Spheniscidae,Eudyptes,Eudyptes chrysolophus,Pingüino macaroni,species
+Spheniscus magellanicus,3812,Aves,Animalia,Aves,Sphenisciformes,Spheniscidae,Spheniscus,Spheniscus magellanicus,Pingüino de Magallanes,species
+Asio flammeus,20315,Aves,Animalia,Aves,Strigiformes,Strigidae,Asio,Asio flammeus,Lechuzón de campo,species
+Athene cunicularia,19975,Aves,Animalia,Aves,Strigiformes,Strigidae,Athene,Athene cunicularia,Lechucita de campo,species
+Bubo virginianus,20044,Aves,Animalia,Aves,Strigiformes,Strigidae,Bubo,Bubo virginianus,Ñacurutú,species
+Bubo virginianus nacurutu,515852,Aves,Animalia,Aves,Strigiformes,Strigidae,Bubo,Bubo virginianus,Ñacurutú,subspecies
+Glaucidium brasilianum,19822,Aves,Animalia,Aves,Strigiformes,Strigidae,Glaucidium,Glaucidium brasilianum,Caburé,species
+Megascops choliba,19788,Aves,Animalia,Aves,Strigiformes,Strigidae,Megascops,Megascops choliba,Tamborcito común,species
+Megascops sanctaecatarinae,19784,Aves,Animalia,Aves,Strigiformes,Strigidae,Megascops,Megascops sanctaecatarinae,Tamborcito Grande,species
+Tyto alba,20445,Aves,Animalia,Aves,Strigiformes,Tytonidae,Tyto,Tyto alba,Lechuza de campanario,species
+Anhinga anhinga,5063,Aves,Animalia,Aves,Suliformes,Anhingidae,Anhinga,Anhinga anhinga,Aninga,species
+Fregata magnificens,4631,Aves,Animalia,Aves,Suliformes,Fregatidae,Fregata,Fregata magnificens,Fragata,species
+Phalacrocorax brasilianus,4308,Aves,Animalia,Aves,Suliformes,Phalacrocoracidae,Phalacrocorax,Phalacrocorax brasilianus,Biguá,species
+Crypturellus obsoletus,20599,Aves,Animalia,Aves,Tinamiformes,Tinamidae,Crypturellus,Crypturellus obsoletus,Perdiz de Monte,species
+Nothura maculosa,20656,Aves,Animalia,Aves,Tinamiformes,Tinamidae,Nothura,Nothura maculosa,Perdiz,species
+Rhynchotus rufescens,20695,Aves,Animalia,Aves,Tinamiformes,Tinamidae,Rhynchotus,Rhynchotus rufescens,Martineta,species
+Trogon surrucura,20763,Aves,Animalia,Aves,Trogoniformes,Trogonidae,Trogon,Trogon surrucura,Surucuá,species

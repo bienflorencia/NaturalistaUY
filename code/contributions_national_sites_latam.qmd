@@ -1,0 +1,572 @@
+---
+title: 'Contribuciones de los sitios nacionales de iNaturalist en América Latina'
+subtitle: 'Análisis de datos'
+format: 
+  html:
+    toc: true
+    toc-location: right
+    smooth-scroll: true
+    html-math-method: katex
+    code-fold: true
+    fig-dpi: 100
+self-contained: true
+editor: source
+author: 'Florencia Grattarola'
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
+editor_options: 
+  chunk_output_type: console
+---
+
+El objetivo de este reporte es dar cuenta de la importancia de los sitios nacionales de iNaturalist.
+
+```{r}
+#| label: libraries
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+library(MASS)
+library(stargazer)
+library(httr)
+library(jsonlite)
+library(knitr)
+library(rgbif)
+library(ggrepel)
+library(extrafont)
+library(tidyverse)  
+
+options(knitr.kable.NA = '') 
+options(scipen=999)
+```
+
+## Sitios Nacionales de iNaturalist
+
+```{r}
+
+iNat_network <- 
+  tribble(~'site', ~'site_name', ~'site_id',
+        'Global', 'iNaturalist', 1,
+        'Mexico', 'iNaturalistMX', 2,
+        'New Zealand', 'iNaturalistNZ', 3,
+        'Canada', 'iNaturalist.ca', 5,
+        'Colombia', 'NaturalistaCO', 6,
+        'Portugal', 'BioDiversity4All', 8,
+        'Australia', 'iNaturalistAU', 9,
+        'Panama', 'iNaturalistPa', 13,
+        'Ecuador', 'iNaturalistEc', 14,
+        'Israel', 'iNaturalistil', 15,
+        'Argentina', 'ArgentiNat', 16,
+        'Costa Rica', 'NaturalistaCR', 17,
+        'Chile', 'iNaturalistCL', 18,
+        'Finland', 'iNaturalistFi', 20,
+        'Sweeden', 'iNaturalist.Se', 21,
+        'Spain', 'Natusfera', 22,
+        'Greece', 'iNaturalistGR', 23,
+        'Guatemala', 'iNaturalistGT', 24,
+        'United Kingdom', 'iNaturalistUK', 25,
+        'Luxembourg', 'iNaturalist.LU', 26,
+        'Taiwan', 'iNaturalistTW', 27,
+        'Uruguay', 'NaturalistaUY', 28)
+
+iNat_network %>% 
+  mutate('#'= row_number()) %>% relocate('#') %>% 
+  rename(`Sitio` = site,
+         `Nombre`=site_name,
+         `ID`=site_id) %>% 
+  kableExtra::kbl(digits=1, format.args = list(big.mark = ',')) %>% 
+  kableExtra::kable_material('striped') %>% 
+  kableExtra::row_spec(row = c(2,5,8,9,11,12,13,18,22), bold = T, color = "white", background = "#228A22")
+```
+
+## Variables de estudio
+
+Variables de respuesta:  
+  - Número de registros en iNaturalist por país: `n_records_inat`.  
+  - Número de registros de iNaturalist en GBIF por país: `n_records_gbif_iNat`.  
+  - Número de usuarios de iNaturalist por país: `n_users`. 
+  
+Variables explicativas:  
+  - Área del país en km^2^: `area`.   
+  - Población del país: `population`.  
+  - Porcentaje del PBI dedicado a la investigación por país: `gdp_research`.  
+  - Latitud media del país (como proxy de biodiversidad esperada): `latitude`.  
+
+## Extracción de datos
+
+### Funciones
+
+```{r}
+#| label: functions
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+source('R/national_sites.R')
+```
+
+### Cálculo de variables
+
+```{r}
+#| label: variables
+#| echo: true
+#| eval: false
+#| message: false
+#| warning: false
+
+LatinAmerica <- tibble(country_name= c('Mexico', 'Brazil', 'Costa Rica', 'Colombia', 'Peru', 'Argentina', 'Ecuador', 'Panama', 'Chile', 'Venezuela', 'Belize', 'Honduras', 'Bolivia', 'Guatemala', 'Cuba', 'Nicaragua', 'Paraguay', 'Bahamas', 'Jamaica', 'Trinidad and Tobago', 'Guyana', 'Dominican Republic', 'El Salvador', 'Suriname', 'Uruguay', 'Haití'), country_code=c('MX', 'BR', 'CR', 'CO', 'PE', 'AR', 'EC', 'PA', 'CL', 'VE', 'BZ', 'HN', 'BO', 'GT', 'CU', 'NI', 'PY', 'BS', 'JM', 'TT', 'GY', 'DO', 'SV', 'SR', 'UY', 'HT'))
+
+LatinAmerica <- left_join(LatinAmerica, iNat_network %>% rename(country_name=site))
+
+n_inat_gbif_country <- recordsPerCountryGBIF(LatinAmerica$country_code)
+n_inat_country <- recordsPerCountryiNat(LatinAmerica$country_name)
+n_users_country <- usersPerCountryiNat(LatinAmerica$country_name)
+
+area_country <-areaPerCountry(LatinAmerica$country_code)
+population <- populationPerCountry(LatinAmerica$country_code)
+gdp_per_capita <- gdpPerCapitaCountry(LatinAmerica$country_code)
+gdp_research <- gdpResearchPerCountry(LatinAmerica$country_code)
+latitude <- latitudePerCountry(LatinAmerica$country_code)
+
+data_variables <- left_join(left_join(left_join(
+  left_join(left_join(left_join(left_join(left_join(
+  LatinAmerica, n_inat_gbif_country),
+  n_inat_country), 
+  n_users_country),
+  area_country), 
+  population), 
+  gdp_per_capita), 
+  gdp_research), latitude)
+
+saveRDS(data_variables, 'data/Latin_America_data_variables.rds')
+```
+
+
+```{r}
+#| label: read-variables
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+data_variables <- readRDS('data/Latin_America_data_variables.rds')
+```
+
+
+## Resultados
+
+### Número de registros de iNaturalist en GBIF por país
+
+```{r}
+#| label: n_inat_gbif_country
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+data_variables %>% 
+  select(country_name, site_name, n_records_gbif, n_records_gbif_iNat) %>% 
+  mutate(proportion=n_records_gbif_iNat*100/n_records_gbif) %>% 
+  arrange(desc(proportion)) %>% 
+  mutate('#'= row_number()) %>% relocate('#') %>% 
+  select(-n_records_gbif_iNat) %>% 
+  rename(`País` = country_name,
+         `Sitio en iNat` = site_name,
+         `Registros en GBIF`=n_records_gbif,
+         # `Registros de iNat en GBIF`=n_records_gbif_iNat,
+         `Proporción de registros de iNat`=proportion) %>% 
+  kableExtra::kbl(digits=4, format.args = list(big.mark = ',')) %>% 
+  kableExtra::kable_material('striped') %>% 
+  kableExtra::row_spec(4, bold = T, color = "white", background = "#228A22") 
+
+
+```
+
+### Número de registros en iNaturalist por país
+
+```{r}
+#| label: n_inat_country
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+data_variables %>% 
+  select(country_name,site_name, n_records_inat) %>% 
+  arrange(desc(n_records_inat)) %>% 
+  mutate('#'= row_number()) %>% relocate('#') %>% 
+  rename(`País` = country_name,
+         `Sitio en iNat` = site_name,
+         `Registros en iNat`=n_records_inat) %>% 
+  kableExtra::kbl(digits=4, format.args = list(big.mark = ',')) %>% 
+  kableExtra::kable_material('striped') %>% 
+  kableExtra::row_spec(14, bold = T, color = "white", background = "#228A22")
+```
+
+### Número de usuarios de iNaturalist por país
+
+```{r}
+#| label: n_users
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+data_variables %>% 
+  select(country_name, site_name, n_users) %>% 
+  arrange(desc(n_users)) %>%
+  mutate('#'= row_number()) %>% relocate('#') %>% 
+  rename(`País` = country_name,
+         `Sitio en iNat` = site_name,
+         `Usuarios en iNat`=n_users) %>% 
+  kableExtra::kbl(digits=4, format.args = list(big.mark = ',')) %>% 
+  kableExtra::kable_material('striped') %>% 
+  kableExtra::row_spec(16, bold = T, color = "white", background = "#228A22")
+```
+
+### Área del país en km^2^
+
+```{r}
+#| label: area_country-table
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+data_variables %>% 
+  select(country_name, site_name, n_records_inat, area) %>% 
+  mutate(records_per_area=n_records_inat/area) %>% 
+  arrange(desc(records_per_area)) %>%
+  select(-c(n_records_inat, area)) %>% 
+  mutate('#'= row_number()) %>% relocate('#') %>% 
+  rename(`País` = country_name,
+         `Sitio en iNat` = site_name,
+         # `Registros en iNat`= n_records_inat,
+         # `Área` = area,
+         `Registros en iNat por km2`=records_per_area) %>% 
+  kableExtra::kbl(digits=4, format.args = list(big.mark = ',')) %>% 
+  kableExtra::kable_material('striped') %>% 
+  kableExtra::row_spec(17, bold = T, color = "white", background = "#228A22")
+
+data_variables %>% 
+  select(country_name, site_name, n_users, area) %>% 
+  mutate(users_per_area=n_users/area) %>% 
+  arrange(desc(users_per_area)) %>%
+  mutate('#'= row_number()) %>% relocate('#') %>% 
+  select(-c(n_users, area)) %>% 
+  rename(`País` = country_name,
+         `Sitio en iNat` = site_name,
+         # `Usuarios en iNat`= n_users,
+         # `Área` = area,
+         `Usuarios en iNat por km2`=users_per_area) %>% 
+  kableExtra::kbl(digits=4, format.args = list(big.mark = ',')) %>% 
+  kableExtra::kable_material('striped') %>% 
+  kableExtra::row_spec(18, bold = T, color = "white", background = "#228A22")
+```
+
+```{r}
+#| label: area_country-plot
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+## records
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(area/1000,n_records_inat/1000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Área (miles de km2)',
+       y='Registros en iNaturalist (miles)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+
+## users
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(area/1000,n_users/1000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Área (miles de km2)',
+       y='Usuarios registrando en iNaturalist (miles)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+### Población del país
+
+```{r}
+#| label: population
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+## records
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(pop/100000, n_records_inat/10000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Número de habitantes (cientos de miles)',
+       y='Registros en iNaturalist (decenas de miles)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+
+## users
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(pop/100000, n_users/1000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Número de habitantes (cientos de miles)',
+       y='Usuarios registrando en iNaturalist (miles)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+
+### PBI per cápita por país
+
+```{r}
+#| label: gdp_country
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+## records
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp/1000, n_records_inat/10000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='PBI per cápita del país (miles de USD)',
+       y='Registros en iNaturalist (decenas de miles)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+
+## users
+ggplot(data_variables %>% 
+         mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp/1000,n_users/1000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='PBI per cápita del país (miles de USD)',
+       y='Usuarios registrando en iNaturalist (miles)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+### Porcentaje del PBI dedicado a la investigación por país
+
+```{r}
+#| label: gdp_research_country
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+## records
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp_research, n_records_inat/10000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Porcentaje del PBI dedicado a la investigación (%)',
+       y='Registros en iNaturalist (decenas de miles)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+
+## users
+ggplot(data_variables %>% 
+         mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp_research,n_users/1000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Porcentaje del PBI dedicado a la investigación (%)',
+       y='Usuarios registrando en iNaturalist (miles)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+### Latitud del centroide del país (como proxy de biodiversidad esperada)
+
+```{r}
+#| label: latitude
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+## records
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(abs(latitude), n_records_inat/10000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Latidud absoluta del centroide del país (grados decimales)',
+       y='Registros en iNaturalist (decenas de miles)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+
+## users
+ggplot(data_variables %>% 
+         mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(abs(latitude), n_users/1000, label = country_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Latidud absoluta del centroide del país (grados decimales)',
+       y='Usuarios registrando en iNaturalist (miles)') +
+  #scale_x_log10() + 
+  scale_y_log10() +
+  theme_bw()
+```
+
+## Modelos explicativos
+
+```{r}
+#| label: regresiones
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+data_regressions <- data_variables %>% 
+  mutate(has_site = ifelse(!is.na(site_name), 1, 0)) %>% 
+  mutate(has_site = as.factor(has_site)) %>% 
+  mutate(proportion=n_records_gbif_iNat*100/n_records_gbif) %>% 
+  dplyr::select(country_code, n_records_inat, n_records_gbif, n_users, proportion, 
+                area, gdp, gdp_research, pop, latitude, has_site) %>% 
+  filter(!is.na(gdp_research) & !is.na(latitude)) # remove NAs
+
+fit_n_records <- lm(n_records_inat ~ area + gdp + gdp_research + pop + latitude + has_site, data=data_regressions)
+step_n_records <- stepAIC(fit_n_records, direction = 'both')
+step_n_records$anova # display results 
+
+fit_gbif <- lm(n_records_gbif ~ area + gdp + gdp_research + pop + latitude + has_site, data=data_regressions)
+step_gbif <- stepAIC(fit_gbif, direction = 'both')
+step_gbif$anova # display results 
+
+fit_users <- lm(n_users ~ area + gdp + gdp_research + pop + latitude + has_site, data=data_regressions)
+step_users <- stepAIC(fit_users, direction = 'both')
+step_users$anova # display results 
+```
+
+### Mejores modelos
+
+```{r}
+#| label: modelos
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+modelo_n_records <- lm(n_records_inat ~ area + pop + has_site, data=data_regressions)
+modelo_gbif <- lm(n_records_gbif ~ pop + has_site, data=data_regressions)
+modelo_users <- lm(n_users ~ area + pop + has_site, data=data_regressions)
+```
+
+#### Número de registros en iNaturalist
+
+```{r}
+#| label: modelo_n_records
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+#| results: 'asis'
+
+stargazer::stargazer(modelo_n_records,
+          ci = T, digits=1,
+          type='html',
+          title = 'Número de registros en iNaturalist')
+```
+
+#### Cantidad de registros en GBIF
+
+```{r}
+#| label: modelo_gbif
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+#| results: 'asis'
+
+stargazer::stargazer(modelo_gbif,
+          ci = T, digits=1,
+          type='html',
+          title = 'Cantidad de registros en GBIF')
+```
+
+#### Cantidad de usuarios en iNat
+
+```{r}
+#| label: modelo_users
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+#| results: 'asis'
+
+stargazer::stargazer(modelo_users,
+          ci = T, digits=1,
+          type='html',
+          title = 'Cantidad de usuarios en iNat')
+
+```
