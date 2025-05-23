@@ -331,6 +331,11 @@ data_variables %>% filter(!is.na(site_name)) %>%
 #| message: false
 #| warning: false
 
+ids <- data_variables %>% 
+  select(country_name,site_name, n_records_inat) %>% 
+  arrange(desc(n_records_inat)) %>% 
+  with(which(!is.na(site_name)))
+
 data_variables %>% 
   select(country_name,site_name, n_records_inat) %>% 
   arrange(desc(n_records_inat)) %>% 
@@ -340,7 +345,7 @@ data_variables %>%
          `Records on iNat`=n_records_inat) %>% 
   kableExtra::kbl(digits=4, format.args = list(big.mark = ',')) %>% 
   kableExtra::kable_material('striped') %>% 
-  kableExtra::row_spec(c(1,2,3,6,7,11,13,14,15,16,19,23,31,34,35,43,47,56,59), bold = T, color = "white", background = "#228A22") %>% 
+  kableExtra::row_spec(ids, bold = T, color = "white", background = "#228A22") %>% 
   kableExtra::scroll_box(height = '600px')
 ```
 
@@ -352,6 +357,12 @@ data_variables %>%
 #| eval: true
 #| message: false
 #| warning: false
+
+ids <- data_variables %>% 
+  select(country_name, site_name, n_records_gbif, n_records_gbif_iNat) %>% 
+  mutate(proportion=n_records_gbif_iNat*100/n_records_gbif) %>% 
+  arrange(desc(proportion)) %>% 
+  with(which(!is.na(site_name)))
 
 data_variables %>% 
   select(country_name, site_name, n_records_gbif, n_records_gbif_iNat) %>% 
@@ -365,7 +376,7 @@ data_variables %>%
          `Proportion`=proportion) %>% 
   kableExtra::kbl(digits=4, format.args = list(big.mark = ',')) %>% 
   kableExtra::kable_material('striped') %>% 
-  kableExtra::row_spec(c(17,19,26,34,38,45,51,52,58,62,78,85,88,104,105,108,111,113,114,120), bold = T, color = "white", background = "#228A22") %>% 
+  kableExtra::row_spec(ids, bold = T, color = "white", background = "#228A22") %>% 
   kableExtra::scroll_box(height = '600px')
 ```
 
@@ -378,6 +389,11 @@ data_variables %>%
 #| message: false
 #| warning: false
 
+ids <- data_variables %>% 
+  select(country_name, site_name, n_users) %>% 
+  arrange(desc(n_users)) %>% 
+  with(which(!is.na(site_name)))
+
 data_variables %>% 
   select(country_name, site_name, n_users) %>% 
   arrange(desc(n_users)) %>%
@@ -387,7 +403,7 @@ data_variables %>%
          `Users recording on iNat`=n_users) %>% 
   kableExtra::kbl(digits=4, format.args = list(big.mark = ',')) %>% 
   kableExtra::kable_material('striped') %>% 
-  kableExtra::row_spec(c(1,2,4,7,10,11,12,14,15,16,18,22,26,28,33,47,49,51,61), bold = T, color = "white", background = "#228A22") %>% 
+  kableExtra::row_spec(ids, bold = T, color = "white", background = "#228A22") %>% 
   kableExtra::scroll_box(height = '600px')
 ```
 
@@ -395,7 +411,6 @@ data_variables %>%
 ## Associations between variables
 
 ### Population of the country
-
 
 ```{r}
 #| label: population-plot
