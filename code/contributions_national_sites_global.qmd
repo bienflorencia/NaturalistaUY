@@ -89,7 +89,7 @@ iNat_network %>%
 
 ## Methods
 
-We tested different explanatory variables and see which is the model that best explains the total number of records a country has on iNaturalist.
+We tested different explanatory variables and saw which is the model that best explains the values a country has for iNaturalist.
 
 **Response variables**:  
 
@@ -757,7 +757,7 @@ step_users$anova # display results
 # n_users ~ area + gdp_research + latitude + has_site
 
 modelo_n_records <- lm(n_records_inat ~ area + gdp + gdp_research + has_site, data=data_regressions)
-modelo_gbif <- lm(n_gbif_inat ~ area + gdp + gdp_research + latitude, data=data_regressions)
+modelo_gbif <- lm(n_gbif_inat ~ area + gdp_research + pop + has_site, data=data_regressions)
 modelo_users <- lm(n_users ~ area + gdp_research + latitude + has_site, data=data_regressions)
 ```
 
