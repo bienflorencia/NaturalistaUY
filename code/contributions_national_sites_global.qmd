@@ -50,7 +50,7 @@ options(scipen=999)
 #| eval: true
 #| message: false
 #| warning: false
-#| tbl-cap: 'Members of the iNaturalist Network. Shown in green are the site from Latin America'
+#| tbl-cap: 'Members of the iNaturalist Network. Shown in green are the sites from Latin America'
 
 iNat_network <- 
   tribble(~'site', ~'site_name', ~'site_id',
@@ -129,28 +129,28 @@ source('R/national_sites.R')
 #| message: false
 #| warning: false
 
-LatinAmerica <- tibble(country_name= c('Mexico', 'Brazil', 'Costa Rica', 'Colombia', 'Peru', 'Argentina', 'Ecuador', 'Panama', 'Chile', 'Venezuela', 'Belize', 'Honduras', 'Bolivia', 'Guatemala', 'Cuba', 'Nicaragua', 'Paraguay', 'Bahamas', 'Jamaica', 'Trinidad and Tobago', 'Guyana', 'Dominican Republic', 'El Salvador', 'Suriname', 'Uruguay', 'Haiti'))
+America <- tibble(country_name= c('Canada', 'Mexico', 'Brazil', 'Costa Rica', 'Colombia', 'Peru', 'Argentina', 'Ecuador', 'Panama', 'Chile', 'Venezuela', 'Belize', 'Honduras', 'Bolivia', 'Guatemala', 'Cuba', 'Nicaragua', 'Paraguay', 'Bahamas', 'Jamaica', 'Trinidad and Tobago', 'Guyana', 'Dominican Republic', 'El Salvador', 'Suriname', 'Uruguay', 'Haiti'))
 
-LatinAmerica <- LatinAmerica %>% 
+America <- America %>% 
   mutate(country_code = countrycode::countrycode(country_name,
                                                  origin = 'country.name',
                                                  destination = 'iso2c'))
 
-LatinAmerica <- left_join(LatinAmerica, iNat_network %>% rename(country_name=site))
+America <- left_join(America, iNat_network %>% rename(country_name=site))
 
-n_inat_gbif_country <- recordsPerCountryGBIF(LatinAmerica$country_code)
-n_inat_country <- recordsPerCountryiNat(LatinAmerica$country_name)
-n_users_country <- usersPerCountryiNat(LatinAmerica$country_name)
+n_inat_gbif_country <- recordsPerCountryGBIF(America$country_code)
+n_inat_country <- recordsPerCountryiNat(America$country_name)
+n_users_country <- usersPerCountryiNat(America$country_name)
 
-area_country <-areaPerCountry(LatinAmerica$country_code)
-population <- populationPerCountry(LatinAmerica$country_code)
-gdp_per_capita <- gdpPerCapitaCountry(LatinAmerica$country_code)
-gdp_research <- gdpResearchPerCountry(LatinAmerica$country_code)
-latitude <- latitudePerCountry(LatinAmerica$country_code)
+area_country <-areaPerCountry(America$country_code)
+population <- populationPerCountry(America$country_code)
+gdp_per_capita <- gdpPerCapitaCountry(America$country_code)
+gdp_research <- gdpResearchPerCountry(America$country_code)
+latitude <- latitudePerCountry(America$country_code)
 
-data_variables_Latam <- left_join(left_join(left_join(
+data_variables_America <- left_join(left_join(left_join(
   left_join(left_join(left_join(left_join(left_join(
-  LatinAmerica, n_inat_gbif_country),
+  America, n_inat_gbif_country),
   n_inat_country), 
   n_users_country),
   area_country), 
@@ -158,7 +158,7 @@ data_variables_Latam <- left_join(left_join(left_join(
   gdp_per_capita), 
   gdp_research), latitude)
 
-saveRDS(data_variables_Latam, 'data/Latin_America_data_variables.rds')
+saveRDS(data_variables_America, 'data/America_data_variables.rds')
 
 ########################################################################
 
@@ -265,7 +265,7 @@ saveRDS(data_variables_Oceania, 'data/Oceania_data_variables.rds')
 
 ########################################################################
 
-variables_global <- bind_rows(data_variables_Latam %>% 
+variables_global <- bind_rows(data_variables_America %>% 
                                 mutate(continent = 'America'),
                               data_variables_Europe %>% 
                                 mutate(continent = 'Europe'),
@@ -275,15 +275,15 @@ variables_global <- bind_rows(data_variables_Latam %>%
                                 mutate(continent = 'Oceania')) %>% 
   unique()
 
-# variables_global <- bind_rows(readRDS('data/Latin_America_data_variables.rds') %>%
-#                                 mutate(continent = 'America'),
-#           readRDS('data/Europe_data_variables.rds') %>%
-#                                 mutate(continent = 'Europe'),
-#           readRDS('data/Asia_data_variables.rds') %>%
-#                                 mutate(continent = 'Asia'),
-#           readRDS('data/Oceania_data_variables.rds') %>%
-#                                 mutate(continent = 'Oceania'))  %>%
-#   unique()
+variables_global <- bind_rows(readRDS('data/America_data_variables.rds') %>%
+                                mutate(continent = 'America'),
+          readRDS('data/Europe_data_variables.rds') %>%
+                                mutate(continent = 'Europe'),
+          readRDS('data/Asia_data_variables.rds') %>%
+                                mutate(continent = 'Asia'),
+          readRDS('data/Oceania_data_variables.rds') %>%
+                                mutate(continent = 'Oceania'))  %>%
+  unique()
 
 saveRDS(variables_global, 'data/global_data_variables.rds')
 ```
@@ -301,6 +301,27 @@ data_variables <- readRDS('data/global_data_variables.rds')
 
 ## Summary of the data for the Network members
 
+```{r}
+#| label: site-variables
+#| echo: false
+#| eval: false
+#| message: false
+#| warning: false
+
+data_variables %>% filter(!is.na(site_name)) %>% 
+  select(continent, country_name, site_name, 
+         n_records_inat, n_records_gbif_iNat, n_users) %>% 
+  arrange(continent, country_name,
+          n_records_inat,n_records_gbif_iNat,n_users) %>% 
+  rename(Continent = continent, Country=country_name,
+         Site=site_name, 
+         `Records on iNat`=n_records_inat,
+         `Records from iNat on GBIF` = n_records_gbif_iNat,
+         `Users recording on iNat`= n_users) %>% 
+  kableExtra::kbl(digits=1, format.args = list(big.mark = ',')) %>% 
+  kableExtra::kable_material('striped') 
+```
+
 ### Total number of records on iNaturalist per country
 
 ```{r}
@@ -316,7 +337,7 @@ data_variables %>%
   mutate('#'= row_number()) %>% relocate('#') %>% 
   rename(`Country` = country_name,
          `iNat site` = site_name,
-         `Records on iNa`=n_records_inat) %>% 
+         `Records on iNat`=n_records_inat) %>% 
   kableExtra::kbl(digits=4, format.args = list(big.mark = ',')) %>% 
   kableExtra::kable_material('striped') %>% 
   kableExtra::row_spec(c(1,2,3,6,7,11,13,14,15,16,19,23,31,34,35,43,47,56,59), bold = T, color = "white", background = "#228A22") %>% 
@@ -752,11 +773,11 @@ step_users$anova # display results
 #| message: false
 #| warning: false
 
-# n_records_inat ~ area + gdp_research + has_site
+# n_records_inat ~ area + gdp_research + pop + has_site
 # n_gbif_inat ~ area + gdp_research + pop + has_site
 # n_users ~ area + gdp_research + latitude + has_site
 
-modelo_n_records <- lm(n_records_inat ~ area + gdp + gdp_research + has_site, data=data_regressions)
+modelo_n_records <- lm(n_records_inat ~ area + gdp_research + pop + has_site, data=data_regressions)
 modelo_gbif <- lm(n_gbif_inat ~ area + gdp_research + pop + has_site, data=data_regressions)
 modelo_users <- lm(n_users ~ area + gdp_research + latitude + has_site, data=data_regressions)
 ```
