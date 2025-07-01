@@ -1,0 +1,726 @@
+---
+title: 'The importance of the iNaturalist network'
+subtitle: 'Meeting: Evolving the iNat network discussion'
+date: 2025-07-01
+author:
+  - name: 'Florencia Grattarola'
+    orcid: 0000-0001-8282-5732
+    # email: grattarola@fzp.czu.cz
+format: 
+  revealjs:
+    self-contained: true
+    auto-stretch: false
+    scrollable: true
+    smaller: true
+    code-copy: true
+    code-tools: true
+    enter-title-slide: false
+    theme: [assets/monash.scss]
+    mainfont: 'Lato, Helvetica'
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/syntax-highlight.css, assets/custom.css, assets/pacman.css]
+    highlight-style: github
+    echo: true
+    # footer: '[https://github.com/bienflorencia/NaturalistaUY](https://github.com/petrkeil/Spatial-Ecology-and-Macroecology)'
+editor: source
+editor_options: 
+  chunk_output_type: console
+---
+
+## The Network
+
+::: incremental
+**iNaturalist** hosts a global network of 21 national sites managed by local institutions such as government agencies, museums, universities, and non-profit organisations.  
+
+Although the platform continues to grow globally, the contributions and progress of its network remain understudied. Here we show the collective progress of the network through numbers, and reveal that countries with a local iNaturalist site differ from the global average.  
+:::
+
+## Methods
+
+We tested different variables to assess what drives the countries' numbers on iNat. Indicators per country were extracted using the WDI: World Development Indicators (World Bank) on the **23rd of May, 2025**. 
+
+<br>
+
+::: columns
+::: {.column width="50%"}
+
+| Response variables                                                                                                                                         |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `n_records_inat`: total number of records on iNaturalist per country                                                                                       |
+| `n_records_gbif_iNat`: number of records from iNaturalist on GBIF per country (proxy for quality, research grade records)                                 |
+| `n_users`: number of users recording in the country (this is not exactly the users from the country, but users that have generated records in the country) |
+  
+:::
+
+::: {.column width="50%"}
+
+| Explanatory variables                                                                         |
+|-----------------------------------------------------------------------------------------------|
+| `pop`: population of the country (*SP.POP.TOTL*)                                           |
+| `area`: area of the country in km^2^ (*AG.SRF.TOTL.K2*)                                    |
+| `latitude`: country's centroid latitude (as a proxy of expected biodiversity)                 |
+| `gdp`: GDP per capita (*NY.GDP.PCAP.CD*)                                                   |
+| `gdp_research`: % of the GDP of the country dedicated to research (*GB.XPD.RSDV.GD.ZS*)    |
+
+:::
+:::
+
+## Associations 
+
+```{r}
+#| echo: false
+#| eval: true
+#| label: library-and-data
+
+library(reactable)
+library(MASS)
+library(randomForest)
+library(stargazer)
+library(httr)
+library(jsonlite)
+library(knitr)
+library(rgbif)
+library(ggrepel)
+library(extrafont)
+library(tidyverse) 
+
+options(knitr.kable.NA = '') 
+options(scipen=999)
+
+iNat_network <- 
+  tribble(~'site', ~'site_name', ~'site_id',
+        'Global', 'iNaturalist', 1,
+        'Mexico', 'iNaturalistMX', 2,
+        'New Zealand', 'iNaturalistNZ', 3,
+        'Canada', 'iNaturalist.ca', 5,
+        'Colombia', 'NaturalistaCO', 6,
+        'Portugal', 'BioDiversity4All', 8,
+        'Australia', 'iNaturalistAU', 9,
+        'Panama', 'iNaturalistPa', 13,
+        'Ecuador', 'iNaturalistEc', 14,
+        'Israel', 'iNaturalistil', 15,
+        'Argentina', 'ArgentiNat', 16,
+        'Costa Rica', 'NaturalistaCR', 17,
+        'Chile', 'iNaturalistCL', 18,
+        'Finland', 'iNaturalistFi', 20,
+        'Sweeden', 'iNaturalist.Se', 21,
+        'Spain', 'Natusfera', 22,
+        'Greece', 'iNaturalistGR', 23,
+        'Guatemala', 'iNaturalistGT', 24,
+        'United Kingdom', 'iNaturalistUK', 25,
+        'Luxembourg', 'iNaturalist.LU', 26,
+        'Taiwan', 'iNaturalistTW', 27,
+        'Uruguay', 'NaturalistaUY', 28)
+
+data_variables <- readRDS('data/global_data_variables.rds')
+```
+
+### Population
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: 'Number of records on iNaturalist vs Population of the country'
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(pop/100000, n_records_inat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Population of the country (hundred thousand)',
+       y='Number of records on iNaturalist (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+
+---
+
+## Associations
+### Population
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of iNat records on GBIF vs Population of the country"
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(pop/100000, n_records_gbif_iNat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Population of the country (hundred thousand)',
+       y='Number of iNat records on GBIF (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### Population
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of users recording on iNaturalist vs Population of the country"
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(pop/100000, n_users, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', col= 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Population of the country (hundred thousand)',
+       y='Number of users recording on iNaturalist') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### Area of the country in km^2^
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: 'Number of records on iNaturalist vs Area of the country'
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(area/1000,n_records_inat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Area of the country (thousand km2)',
+       y='Number of records on iNaturalist (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### Area of the country in km^2^
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: 'Number of iNat records on GBIF vs Area of the country'
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(area/1000, n_records_gbif_iNat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Area of the country (thousand km2)',
+       y='Number of iNat records on GBIF (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### Area of the country in km^2^
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: 'Number of users recording on iNaturalist vs Area of the country'
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(area/1000, n_users, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Area of the country (thousand km2)',
+       y='Number of users recording on iNaturalist') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### Country's centroid latitude
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of records on iNaturalist vs country's centroid latitude"
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(abs(latitude), n_records_inat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Absolute decimal latitude of the country\'s centroid',
+       y='Number of records on iNaturalist (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### Country's centroid latitude
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of iNat records on GBIF vs country's centroid latitude"
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(abs(latitude), n_records_gbif_iNat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Absolute decimal latitude of the country\'s centroid',
+       y='Number of iNat records on GBIF (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### Country's centroid latitude
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of users recording on iNaturalist vs country's centroid latitude"
+
+ggplot(data_variables %>% 
+         mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(abs(latitude), n_users, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='Absolute decimal latitude of the country\'s centroid',
+       y='Number of users recording on iNaturalist') +
+  #scale_x_log10() + 
+  scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### GDP per capita
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of records on iNaturalist vs country's GDP per capita"
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp/1000, n_records_inat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='GDP per capita (thousand USD)',
+       y='Number of records on iNaturalist (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### GDP per capita
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of iNat records on GBIF vs country's GDP per capita"
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp/1000, n_records_gbif_iNat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='GDP per capita (thousand USD)',
+       y='Number of iNat records on GBIF (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### GDP per capita
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of users recording on iNaturalist vs GDP per capita"
+
+ggplot(data_variables %>% 
+         mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp/1000, n_users, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='GDP per capita (thousand USD)',
+       y='Number of users recording on iNaturalist') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### % of the GDP of the country dedicated to research
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of records on iNaturalist vs % of the country's GDP dedicated to research"
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp_research, n_records_inat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='GDP of the country dedicated to research (%)',
+       y='Number of records on iNaturalist (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### % of the GDP of the country dedicated to research
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of iNat records on GBIF vs % of the country's GDP dedicated to research"
+
+ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp_research, n_records_gbif_iNat/1000, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='GDP of the country dedicated to research (%)',
+       y='Number of iNat records on GBIF (thousand)') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Associations
+### % of the GDP of the country dedicated to research
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-cap: "Number of users recording on iNaturalist vs % of the country's GDP dedicated to research"
+
+ggplot(data_variables %>% 
+         mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
+       aes(gdp_research,n_users, label = site_name)) +
+  geom_point(aes(col=site_on_iNat), size=2, show.legend = F) +
+  scale_color_manual(values = c('black', '#74AC00')) +
+  geom_smooth(method='lm', colour = 'black') +
+  geom_label_repel(aes(fill=site_on_iNat), 
+                   colour = "black", #fontface = "bold",
+                   segment.color = 'black',
+                   show.legend = F, max.overlaps= Inf) +
+  scale_fill_manual(values = c('#F7F7F7', '#74AC00')) +
+  labs(x='GDP of the country dedicated to research (%)',
+       y='Number of users recording on iNaturalist') +
+  scale_x_log10() + scale_y_log10() +
+  theme_bw()
+```
+
+---
+
+## Models {.smaller}
+
+We used the variables in logarithmic scale
+
+```{r}
+#| echo: false
+#| eval: true
+
+data_regressions <- data_variables %>% 
+  mutate(has_site = ifelse(!is.na(site_name), 1, 0)) %>% 
+  mutate(has_site = as.factor(has_site)) %>% 
+  mutate(n_gbif_inat = n_records_gbif_iNat) %>% 
+  dplyr::select(country_code, n_records_inat, n_gbif_inat, n_users,  
+                area, gdp, gdp_research, pop, latitude, has_site) %>% 
+  filter(!is.na(gdp_research) & !is.na(latitude)) %>% # remove NAs
+  mutate(log_n_gbif_inat = log(n_gbif_inat),
+         log_n_records_inat = log(n_records_inat),
+         log_n_users = log(n_users), 
+         log_area = log(area),
+         log_pop = log(pop),
+         log_gdp = log(gdp))
+
+reactable(data_regressions %>%
+  filter(has_site == 1) %>% 
+  mutate('#'= row_number()) %>% relocate('#') %>% 
+  dplyr::select(country_code,n_records_inat, n_gbif_inat,n_users,
+         area,pop,gdp,gdp_research,latitude) %>% 
+  rename(`Country` = country_code,
+         `Number of records on iNat`=n_records_inat,
+         `Number of iNat records on GBIF`=n_gbif_inat,
+         `Number of users recording`=n_users,
+         `Area of the country in km2`=area, 
+         `GDP per capita`=gdp,
+         `% of the GDP of the country dedicated to research`=gdp_research,
+         Population=pop,
+         `Country’s centroid latitude`=latitude),
+          filterable = TRUE,
+          resizable = FALSE,
+          defaultPageSize = 25,
+          wrap = TRUE,    
+          outlined = TRUE,
+          striped = TRUE, 
+          searchable = F,
+          defaultColDef = colDef(minWidth = 200, 
+                                 format = colFormat(digits=2, 
+                                                    separators = TRUE,
+                                                    )))
+```
+
+---
+
+## Models
+
+We found that the presence of a national iNaturalist hub was a highly significant positive factor in all three models.
+
+--- 
+
+## Models: GLM
+
+### Total number of records on iNaturalist per country
+
+```{r}
+#| label: regression-n_records
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+fit_n_records <- lm(log_n_records_inat ~ log_area + log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+step_n_records <- stepAIC(fit_n_records, direction = 'both', trace=F)
+step_n_records$anova
+```
+
+--- 
+
+## Models: GLM
+
+### Total number of records on iNaturalist per country
+
+```{r}
+#| echo: false
+#| eval: true
+
+modelo_n_records <- lm(log_n_records_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+
+summary(modelo_n_records)
+```
+
+--- 
+
+## Models: GLM
+
+### Number of records from iNaturalist on GBIF per country
+
+```{r}
+#| echo: true
+#| eval: true
+
+fit_gbif <- lm(log_n_gbif_inat ~ log_area + log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+step_gbif <- stepAIC(fit_gbif, direction = 'both', trace = F)
+step_gbif$anova
+```
+
+--- 
+
+## Models: GLM
+
+### Number of records from iNaturalist on GBIF per country
+
+```{r}
+#| echo: false
+#| eval: true
+
+modelo_gbif <- lm(log_n_gbif_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+
+summary(modelo_gbif)
+```
+
+--- 
+
+## Models: GLM
+
+### Number of users recording in the country
+
+```{r}
+#| echo: true
+#| eval: true
+
+fit_users <- lm(log_n_users ~ log_area + log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+step_users <- stepAIC(fit_users, direction = 'both', trace = F)
+step_users$anova
+```
+
+--- 
+
+## Models: GLM
+
+### Number of users recording in the country
+
+```{r}
+#| echo: false
+#| eval: true
+
+modelo_users <- lm(log_n_users ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+
+summary(modelo_users)
+```
+
+---
+
+## Models: Random Forest
+
+### Total number of records on iNaturalist per country
+
+```{r}
+#| echo: false
+#| eval: true
+
+rf_n_records <- randomForest(log_n_records_inat ~ log_area + log_gdp + 
+                               gdp_research + log_pop + 
+                               latitude + has_site, data=data_regressions,
+                             na.action=na.omit,
+                             mtry = 2,
+                             nperm=10, importance=T) 
+
+varImpPlot(rf_n_records, main = 'Total number of records on iNaturalist', type=2)
+```
+
+---
+
+## Models: Random Forest
+### Number of records from iNaturalist on GBIF per country
+
+```{r}
+#| echo: false
+#| eval: true
+
+rf_gbif <- randomForest(log_n_gbif_inat ~ log_area + log_gdp + 
+                          gdp_research + log_pop + 
+                          latitude + has_site, data=data_regressions,
+                             na.action=na.omit,
+                        mtry = 2,
+                             nperm=10, importance=T)
+
+varImpPlot(rf_gbif, main = 'Number of records from iNaturalist on GBIF', type=2)
+
+```
+
+---
+
+## Models: Random Forest
+### Number of users recording in the country
+
+```{r}
+#| echo: false
+#| eval: true
+
+rf_users <- randomForest(log_n_users ~ log_area + log_gdp + 
+                          gdp_research + log_pop + 
+                          latitude + has_site, data=data_regressions,
+                             na.action=na.omit,
+                         mtry = 2,
+                             nperm=10, importance=T)
+
+varImpPlot(rf_users, main = 'Number of users recording', type=2)
+
+```
+
+---
+
+## Conclusions
+
+Since users often engage beyond national borders, e.g., through identifications, taxon curation, and travel, our results suggest that the efforts of the network have contributed significantly to iNaturalist’s global success beyond the United States. Our findings also highlight the value of localised strategies within global citizen science platforms. 

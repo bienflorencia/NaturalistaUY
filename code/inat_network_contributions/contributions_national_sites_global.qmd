@@ -29,6 +29,7 @@ The aim of this report is to give an account of the importance of the iNaturalis
 #| warning: false
 
 library(MASS)
+library(randomForest)
 library(stargazer)
 library(httr)
 library(jsonlite)
@@ -89,7 +90,7 @@ iNat_network %>%
 
 ## Methods
 
-We tested different explanatory variables and saw which is the model that best explains the values a country has for iNaturalist.
+We tested different explanatory variables and saw which is the model that best explains the values a country has for iNaturalist. Indicators per country were extracted using the WDI: World Development Indicators (World Bank) on the **23rd of May, 2025**. 
 
 **Response variables**:  
 
@@ -99,12 +100,11 @@ We tested different explanatory variables and saw which is the model that best e
 
 **Explanatory variables**:  
 
-  - population of the country: `population`.  
-  - area of the country in km^2^: `area`.  
-  - country's centroid latitude (as a proxy of expected biodiversity): `latitude`.  
-  - human development index: `hdi`.  
-  - GDP per capita: `gdp_per_capita`.  
-  - % of the GDP of the country dedicated to research: `gdp_research`.  
+  - population of the country: `population` (*SP.POP.TOTL*).  
+  - area of the country in km^2^: `area` (*AG.SRF.TOTL.K2*).  
+  - country's centroid latitude (as a proxy of expected biodiversity): `latitude` (rnaturalearth).  
+  - GDP per capita: `gdp_per_capita` (*NY.GDP.PCAP.CD*).  
+  - % of the GDP of the country dedicated to research: `gdp_research` *GB.XPD.RSDV.GD.ZS*).  
 
 ### Data extraction
 
@@ -606,6 +606,10 @@ ggplot(data_variables %>%
 #| eval: true
 #| message: false
 #| warning: false
+#| fig-cap: 
+#| - "Number of records on iNaturalist vs country's GDP per capita"
+#| - "Number of iNat records on GBIF vs country's GDP per capita"
+#| - "Number of users recording on iNaturalist vs GDP per capita"
 
 ## records
 ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
@@ -666,6 +670,10 @@ ggplot(data_variables %>%
 #| eval: true
 #| message: false
 #| warning: false
+#| fig-cap: 
+#| - "Number of records on iNaturalist vs % of the country's GDP dedicated to research"
+#| - "Number of iNat records on GBIF vs % of the country's GDP dedicated to research"
+#| - "Number of users recording on iNaturalist vs % of the country's GDP dedicated to research"
 
 ## records
 ggplot(data_variables %>% mutate(site_on_iNat = ifelse(!is.na(site_id), 'yes', 'no')), 
@@ -733,8 +741,13 @@ data_regressions <- data_variables %>%
   mutate(n_gbif_inat = n_records_gbif_iNat) %>% 
   dplyr::select(country_code, n_records_inat, n_gbif_inat, n_users,  
                 area, gdp, gdp_research, pop, latitude, has_site) %>% 
-  filter(!is.na(gdp_research) & !is.na(latitude)) # remove NAs
-
+  filter(!is.na(gdp_research) & !is.na(latitude)) %>% # remove NAs
+  mutate(log_n_gbif_inat = log(n_gbif_inat),
+         log_n_records_inat = log(n_records_inat),
+         log_n_users = log(n_users), 
+         log_area = log(area),
+         log_pop = log(pop),
+         log_gdp = log(gdp))
 ```
 
 ### Total number of records on iNaturalist per country
@@ -746,7 +759,7 @@ data_regressions <- data_variables %>%
 #| message: false
 #| warning: false
 
-fit_n_records <- lm(n_records_inat ~ area + gdp + gdp_research + pop + latitude + has_site, data=data_regressions)
+fit_n_records <- lm(log_n_records_inat ~ log_area + log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
 step_n_records <- stepAIC(fit_n_records, direction = 'both')
 step_n_records$anova # display results 
 ```
@@ -760,7 +773,7 @@ step_n_records$anova # display results
 #| message: false
 #| warning: false
 
-fit_gbif <- lm(n_gbif_inat ~ area + gdp + gdp_research + pop + latitude + has_site, data=data_regressions)
+fit_gbif <- lm(log_n_gbif_inat ~ log_area + log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
 step_gbif <- stepAIC(fit_gbif, direction = 'both')
 step_gbif$anova # display results 
 ```
@@ -774,7 +787,7 @@ step_gbif$anova # display results
 #| message: false
 #| warning: false
 
-fit_users <- lm(n_users ~ area + gdp + gdp_research + pop + latitude + has_site, data=data_regressions)
+fit_users <- lm(log_n_users ~ log_area + log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
 step_users <- stepAIC(fit_users, direction = 'both')
 step_users$anova # display results 
 ```
@@ -789,12 +802,17 @@ step_users$anova # display results
 #| warning: false
 
 # n_records_inat ~ area + gdp_research + pop + has_site
-# n_gbif_inat ~ area + gdp_research + pop + has_site
-# n_users ~ area + gdp_research + latitude + has_site
+# log_n_records_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site
 
-modelo_n_records <- lm(n_records_inat ~ area + gdp_research + pop + has_site, data=data_regressions)
-modelo_gbif <- lm(n_gbif_inat ~ area + gdp_research + pop + has_site, data=data_regressions)
-modelo_users <- lm(n_users ~ area + gdp_research + latitude + has_site, data=data_regressions)
+# n_gbif_inat ~ area + gdp_research + pop + has_site
+# log_n_gbif_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site
+
+# n_users ~ area + gdp_research + latitude + has_site
+# log_n_users ~ log_gdp + gdp_research + log_pop + latitude + has_site
+
+modelo_n_records <- lm(log_n_records_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+modelo_gbif <- lm(log_n_gbif_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+modelo_users <- lm(log_n_users ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
 ```
 
 #### Total number of records on iNaturalist per country
@@ -810,7 +828,7 @@ modelo_users <- lm(n_users ~ area + gdp_research + latitude + has_site, data=dat
 stargazer::stargazer(modelo_n_records,
           ci = T, digits=1,
           type='html',
-          title = 'Número de registros en iNaturalist')
+          title = 'Total number of records on iNaturalist')
 ```
 
 #### Number of records from iNaturalist on GBIF per country
@@ -826,7 +844,7 @@ stargazer::stargazer(modelo_n_records,
 stargazer::stargazer(modelo_gbif,
           ci = T, digits=1,
           type='html',
-          title = 'Cantidad de registros en GBIF')
+          title = 'Number of records from iNaturalist on GBIF')
 ```
 
 #### Number of users recording in the country
@@ -842,6 +860,68 @@ stargazer::stargazer(modelo_gbif,
 stargazer::stargazer(modelo_users,
           ci = T, digits=1,
           type='html',
-          title = 'Cantidad de usuarios en iNat')
+          title = 'Number of users recording')
 
 ```
+
+
+## Random forest
+
+### Total number of records on iNaturalist per country
+
+```{r}
+#| label: rf-n_records
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+rf_n_records <- randomForest(log_n_records_inat ~ log_area + log_gdp + 
+                               gdp_research + log_pop + 
+                               latitude + has_site, data=data_regressions,
+                             na.action=na.omit,
+                             mtry = 2,
+                             nperm=10, importance=T) 
+
+varImpPlot(rf_n_records, main = 'Total number of records on iNaturalist', type=2)
+```
+
+### Number of records from iNaturalist on GBIF per country
+
+```{r}
+#| label: rf-gbif
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+rf_gbif <- randomForest(log_n_gbif_inat ~ log_area + log_gdp + 
+                          gdp_research + log_pop + 
+                          latitude + has_site, data=data_regressions,
+                             na.action=na.omit,
+                        mtry = 2,
+                             nperm=10, importance=T)
+
+varImpPlot(rf_gbif, main = 'Number of records from iNaturalist on GBIF', type=2)
+```
+
+### Number of users recording in the country
+
+```{r}
+#| label: rf-n_users
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+
+rf_users <- randomForest(log_n_users ~ log_area + log_gdp + 
+                          gdp_research + log_pop + 
+                          latitude + has_site, data=data_regressions,
+                             na.action=na.omit,
+                         mtry = 2,
+                             nperm=10, importance=T)
+
+varImpPlot(rf_users, main = 'Number of users recording', type=2)
+```
+
