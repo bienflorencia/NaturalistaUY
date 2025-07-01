@@ -594,7 +594,7 @@ step_n_records$anova
 #| echo: false
 #| eval: true
 
-modelo_n_records <- lm(log_n_records_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+modelo_n_records <- lm(log_n_records_inat ~ log_gdp + log_pop + has_site, data=data_regressions)
 
 summary(modelo_n_records)
 ```
@@ -624,7 +624,7 @@ step_gbif$anova
 #| echo: false
 #| eval: true
 
-modelo_gbif <- lm(log_n_gbif_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+modelo_gbif <- lm(log_n_gbif_inat ~ log_gdp + log_pop + has_site, data=data_regressions)
 
 summary(modelo_gbif)
 ```
@@ -654,7 +654,7 @@ step_users$anova
 #| echo: false
 #| eval: true
 
-modelo_users <- lm(log_n_users ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+modelo_users <- lm(log_n_users ~ log_gdp + log_pop + has_site, data=data_regressions)
 
 summary(modelo_users)
 ```

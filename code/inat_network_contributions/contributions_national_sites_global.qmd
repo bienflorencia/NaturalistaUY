@@ -810,9 +810,9 @@ step_users$anova # display results
 # n_users ~ area + gdp_research + latitude + has_site
 # log_n_users ~ log_gdp + gdp_research + log_pop + latitude + has_site
 
-modelo_n_records <- lm(log_n_records_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
-modelo_gbif <- lm(log_n_gbif_inat ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
-modelo_users <- lm(log_n_users ~ log_gdp + gdp_research + log_pop + latitude + has_site, data=data_regressions)
+modelo_n_records <- lm(log_n_records_inat ~ log_gdp + log_pop + has_site, data=data_regressions)
+modelo_gbif <- lm(log_n_gbif_inat ~ log_gdp + log_pop + has_site, data=data_regressions)
+modelo_users <- lm(log_n_users ~ log_gdp + log_pop + has_site, data=data_regressions)
 ```
 
 #### Total number of records on iNaturalist per country
