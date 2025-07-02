@@ -237,7 +237,7 @@ latitudePerCountry <- function(list_of_country_codes){
                               latitude = NA)
       country_lat <- rbind(country_lat, country_lat_i) 
     } else {
-      latitude <- sf::st_coordinates(sf::st_centroid(latitude$geometry))[1,1]
+      latitude <- sf::st_coordinates(sf::st_centroid(latitude$geometry))[1,2]
       
       country_lat_i <- tibble(country_code = country_code,
                               latitude = latitude)
