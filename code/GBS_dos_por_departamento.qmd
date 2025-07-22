@@ -1,0 +1,157 @@
+---
+title: 'De cara a la GBS'
+format: 
+  html:
+    toc: true
+    toc-location: right
+    smooth-scroll: true
+    html-math-method: katex
+    code-fold: true
+    fig-dpi: 100
+self-contained: true
+editor: source
+author: 'Florencia Grattarola'
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
+editor_options: 
+  chunk_output_type: console
+---
+
+## ¿Cuál es la planta y el animal más registrado por departamento?
+
+```{r}
+#| label: libraries
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+library(httr)
+library(jsonlite)
+library(knitr)
+library(sf)
+sf_use_s2(FALSE)
+library(tmap)
+tmap_mode('view')
+library(tidyverse)  
+
+options(knitr.kable.NA = '') 
+options(scipen=999)
+```
+
+
+### Función para la extracción de datos
+
+```{r}
+#| label: funcion
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+getTwoTaxaPerState <- function(place_ids, preferred_place_id){
+  
+  # preferred_place_id 7259 for common name = Uruguay
+  
+  twoTaxaPerState <- tibble(place_id = numeric(),
+                            taxon_name = character(),
+                            iconic_taxon_name = character(),
+                            common_name = character(),
+                            observations_place = numeric(),
+                            observations_iNat = numeric())
+  
+  api <- 'https://api.inaturalist.org/v1/observations/species_counts'
+  page <- '&page=1&per_page=10'
+  
+  for(place_id in place_ids) {
+    for(taxon_id in c(1, 47126)){ # Animalia, Plantae
+      
+      call_url_obs <- str_glue('{api}?verifiable=true&place_id={place_id}&rank=species&taxon_id={taxon_id}&locale=es&preferred_place_id={preferred_place_id}&include_ancestors=false')
+      
+      get_json_call_observations <- GET(url = call_url_obs) %>%
+        content(as = "text") %>% fromJSON(flatten = TRUE)
+      
+      results <- as_tibble(get_json_call_observations$results) %>%
+        slice_head(n=1)
+      
+      taxaPerState_i <- tibble(place_id = place_id,
+                               kingdom = ifelse(taxon_id == 1, 'Animalia', 'Plantae'),
+                               taxon_name = results$taxon.name,
+                               iconic_taxon_name = results$taxon.iconic_taxon_name,
+                               common_name = results$taxon.preferred_common_name,
+                               observations_place = results$count,
+                               observations_iNat = results$taxon.observations_count)
+      
+      twoTaxaPerState <- rbind(twoTaxaPerState, taxaPerState_i)
+    }
+  }
+  return(twoTaxaPerState)
+}
+
+```
+
+### Extracción de datos
+
+```{r}
+#| label: datos
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+place_ids_departamento <- tibble(departamento = 
+                     c('Artigas', 'Salto', 'Rivera',
+                       'Tacuarembó', 'Paysandú', 
+                       'Cerro Largo', 'Río Negro', 'Durazno', 
+                       'Treinta y Tres', 'Soriano', 
+                       'Florida', 'Flores', 'Rocha', 
+                       'Lavalleja', 'Colonia', 'San José',
+                       'Maldonado', 'Canelones', 'Montevideo'),
+                   place_id = c(12409, 12421, 12418, 12424, 
+                                12417, 12411, 12419, 12412, 
+                                12425, 12423, 7534, 12413, 
+                                12420, 12414, 8007, 12422, 
+                                12415, 12410, 12416))
+
+  
+dos_taxa_por_depto <- getTwoTaxaPerState(place_ids = place_ids_departamento$place_id, 
+                                         preferred_place_id = 7259)
+
+dos_taxa_por_depto <- left_join(place_ids_departamento,
+                                dos_taxa_por_depto)
+dos_taxa_por_depto %>% 
+  kableExtra::kable()
+```
+
+
+### Mapeo de resultados
+
+```{r}
+#| label: mapa
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+uruguay <- geodata::gadm(country = 'UY', 
+                         level = 1, path = 'data/') %>%
+  st_as_sf() %>% st_cast()
+
+planta_por_depto <- left_join(uruguay %>%
+                                select(departamento=NAME_1),
+                              dos_taxa_por_depto %>%
+                                filter(kingdom=='Plantae'))
+
+animal_por_depto <- left_join(uruguay %>%
+                                select(departamento=NAME_1),
+                              dos_taxa_por_depto %>%
+                                filter(kingdom=='Animalia'))
+
+tm_shape(planta_por_depto) + 
+  tm_polygons()
+
+tm_shape(animal_por_depto) + 
+  tm_polygons()
+```
+
+
+
