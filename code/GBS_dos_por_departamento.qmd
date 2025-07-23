@@ -86,7 +86,53 @@ getTwoTaxaPerState <- function(place_ids, preferred_place_id){
   }
   return(twoTaxaPerState)
 }
+getPhotoFromiNat <- function(species_list, place_id, license){
+  
+  species_photos <- tibble(taxon_name = character(),
+                           taxon_id = numeric(),
+                           observation_url = character(),
+                           photo_url = character())
 
+  api <- 'https://api.inaturalist.org/v1/observations'
+  page <- '&page=1&per_page=10'
+  
+  for(species_name in species_list){
+    
+    call_url <- str_glue('{api}?photo_license={license}&place_id={place_id}&q={species_name}&order=desc&order_by=votes{page}')
+    
+    get_json_call <- GET(url = URLencode(call_url)) %>%
+      content(as = "text") %>% fromJSON(flatten = TRUE)
+    
+    results <- as_tibble(get_json_call$results) %>%
+      slice_head(n=1)
+
+    species_photos_i <- tibble(taxon_name = species_name,
+                               taxon_id = results$taxon.id,
+                               user_login = results$user.login,
+                               observation_url = str_replace(results$uri,
+                                                             'inaturalist.org',
+                                                             'naturalista.uy'),
+                               photo_url = results$photos)
+    
+    species_photos <- rbind(species_photos, species_photos_i)
+  }
+  
+  species_photos <- species_photos %>% 
+    unnest_wider(photo_url, names_sep = "_") %>% 
+    unnest_wider(col=c(photo_url_license_code, photo_url_url), names_sep = "_") %>%
+    select(-c(photo_url_id, photo_url_attribution, 
+              photo_url_flags, photo_url_moderator_actions,
+              photo_url_hidden, photo_url_original_dimensions.width, 
+              photo_url_original_dimensions.height)) %>% 
+    relocate(starts_with('photo_url_url'), 
+             .before = starts_with('photo_url_license')) %>% 
+    rename_with(~ str_replace(.x, 'photo_url_url_', 'photo_url_'), 
+                starts_with('photo_url_url_')) %>% 
+    rename_with(~ str_replace(.x, 'photo_url_license', 'photo_license'), 
+                starts_with('photo_url_license'))
+  
+  return(species_photos)
+}
 ```
 
 ### Extracción de datos
@@ -118,8 +164,30 @@ dos_taxa_por_depto <- getTwoTaxaPerState(place_ids = place_ids_departamento$plac
 
 dos_taxa_por_depto <- left_join(place_ids_departamento,
                                 dos_taxa_por_depto)
+
+dos_taxa_por_depto_fotos <- getPhotoFromiNat(species_list = unique(dos_taxa_por_depto$taxon_name),
+                 place_id  = 7259,
+                 license =  'cc-by')
+
+dos_taxa_por_depto <- left_join(dos_taxa_por_depto,
+                                dos_taxa_por_depto_fotos)
+
 dos_taxa_por_depto %>% 
-  kableExtra::kable()
+  select(departamento, kingdom, iconic_taxon_name,
+         taxon_name, common_name, observations_place,
+         observation_url, photo_url_1) %>% 
+  mutate(photo_url_1 = '') %>% 
+  rename(Departamento = departamento, 
+         Reino = kingdom, 
+         Grupo = iconic_taxon_name,
+         Especie = taxon_name, 
+         `Nombre común` = common_name, 
+         `N observaciones` = observations_place,
+         URL = observation_url,
+         Imagen = photo_url_1) %>% 
+  kableExtra::kable() %>% 
+  kableExtra::column_spec(7, link = dos_taxa_por_depto$observation_url) %>%
+  kableExtra::column_spec(8, image = kableExtra::spec_image(dos_taxa_por_depto$photo_url_1, 280, 200))
 ```
 
 
