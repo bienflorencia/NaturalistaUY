@@ -18,6 +18,8 @@ editor_options:
 
 ## ¿Cuál es la planta y el animal más registrado por departamento?
 
+### Librerías
+
 ```{r}
 #| label: libraries
 #| echo: true
@@ -191,7 +193,7 @@ dos_taxa_por_depto %>%
 ```
 
 
-### Mapeo de resultados
+## Mapeo de resultados
 
 ```{r}
 #| label: mapa
@@ -214,11 +216,52 @@ animal_por_depto <- left_join(uruguay %>%
                               dos_taxa_por_depto %>%
                                 filter(kingdom=='Animalia'))
 
-tm_shape(planta_por_depto) + 
-  tm_polygons()
+palete <- colorRampPalette(RColorBrewer::brewer.pal(10, 'Paired'))( 19 ) ## (n)
 
-tm_shape(animal_por_depto) + 
-  tm_polygons()
+```
+
+### Planta más registrada por departamento
+
+```{r}
+#| label: plantas
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+tm_shape(planta_por_depto %>%
+           select(Departamento = departamento, 
+                  Grupo = iconic_taxon_name,
+                  Especie = taxon_name, 
+                  `Nombre común` = common_name,
+                  `N observaciones` = observations_place)) + 
+  tm_polygons(fill = 'Especie', 
+              fill.scale  = tm_scale_categorical(values=palete),
+              fill.legend = tm_legend_hide()) +
+  tm_text('Especie', fontfamily = 'monospace',
+          options = opt_tm_text(remove_overlap = TRUE)) 
+```
+
+### Animal más registrados por departamento
+
+```{r}
+#| label: animales
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+tm_shape(animal_por_depto %>%
+           select(Departamento = departamento, 
+                  Grupo = iconic_taxon_name,
+                  Especie = taxon_name, 
+                  `Nombre común` = common_name,
+                  `N observaciones` = observations_place)) + 
+  tm_polygons(fill = 'Especie', 
+              fill.scale  = tm_scale_categorical(values=palete),
+              fill.legend = tm_legend_hide()) +
+  tm_text('Especie', fontfamily = 'monospace',
+          options = opt_tm_text(remove_overlap = TRUE)) 
 ```
 
 
