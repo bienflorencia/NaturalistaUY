@@ -4,13 +4,14 @@
 getPlaceIDiNat <- function(country_name){
   
   api <- 'https://api.inaturalist.org/v1'
-  page <- '&page=1&per_page=1'
+  page <- '&page=1&per_page=10'
   
   call_url_place <- str_glue('{api}/places/autocomplete?q={country_name}{page}')
   get_json_call_place <- GET(url = URLencode(call_url_place)) %>%
     content(as = "text") %>% fromJSON(flatten = TRUE)
   results_place <- as_tibble(get_json_call_place$results)
   if(nrow(results_place) != 0){
+    results_place <- results_place %>% filter(admin_level == 0 & name == country_name)
     place_id <- results_place$id[results_place$admin_level==0]
   } else {
     place_id <- NA
@@ -108,6 +109,38 @@ usersPerCountryiNat <- function(list_of_countries){
       }
     }
   return(users_iNat_records)
+}
+
+########################################################################
+# Número de taxa en iNaturalist por país: `n_users_country`.  
+taxaPerCountryiNat <- function(list_of_countries){
+  
+  taxa_iNat_records <- tibble(country_name = character(),
+                              n_taxa = numeric())
+  
+  api <- 'https://api.inaturalist.org/v1/observations/species_counts'
+  page <- '&page=1&per_page=1'
+  
+  for(country_name in list_of_countries){
+    
+    place_id <- getPlaceIDiNat(country_name)
+    
+    if(!is.na(place_id)){
+      call_url_observations <- str_glue('{api}?verifiable=true&place_id={place_id}')
+      get_json_call_observations <- GET(url = call_url_observations) %>%
+        content(as = "text") %>% fromJSON(flatten = TRUE)
+      n_taxa <- as_tibble(get_json_call_observations$total_results) 
+      
+      taxa_iNat_records_i <- tibble(country_name = country_name,
+                                     n_taxa = n_taxa$value)
+      taxa_iNat_records <- rbind(taxa_iNat_records, taxa_iNat_records_i)
+    } else {
+      taxa_iNat_records_i <- tibble(country_name = country_name,
+                                         n_taxa = NA)
+      taxa_iNat_records <- rbind(taxa_iNat_records, taxa_iNat_records_i)
+    }
+  }
+  return(taxa_iNat_records)
 }
 
 ########################################################################
