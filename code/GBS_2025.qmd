@@ -1,0 +1,1439 @@
+---
+title: "Gran Biobúsqueda del Sur 2025 en Uruguay"
+subtitle: "Reporte creado con `reportiNat`"
+format: 
+  html:
+    toc: true
+    toc-location: right
+    number-sections: true
+    smooth-scroll: true
+    html-math-method: katex
+    code-fold: true
+    lang: es
+self-contained: true
+editor: source
+author: 'Florencia Grattarola'
+date: '`r format(Sys.time(), "%Y-%m-%d")`'
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| label: data-download
+#| echo: false
+#| eval: true
+#| results: hide
+#| message: false
+#| warning: false
+
+# Sys.setlocale(category = "LC_TIME",locale = "es_ES")
+tictoc::tic()
+library(bslib)
+library(wdpar)
+library(janitor)
+library(plotly)
+library(patchwork)
+library(httr)
+library(jsonlite)
+library(knitr)
+options(knitr.kable.NA = '')
+# library(geouy)
+library(geodata)
+geodata::geodata_path('data/')
+library(lubridate)
+library(rredlist)
+library(tmap)
+tmap_mode('view')
+library(sf)
+sf::sf_use_s2(FALSE)
+# options
+options(scipen = 999)
+library(tidyverse)
+
+getProjectInfo <- function(project_id){
+
+  projectInfo <- tibble(project_id = numeric(),
+                        project_slug = character(),
+                        project_creator = character(),
+                        project_title = character(),
+                        project_type = character(),
+                        created_at = character())
+  
+  api <- 'https://api.inaturalist.org/v1/projects'
+  call_url <- str_glue('{api}?q={project_id}')
+  
+  get_json_call <- GET(url = call_url) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  
+  results <- as_tibble(get_json_call$results)
+  projectInfo <- tibble(project_id = results$id,
+                        project_slug = results$slug,
+                        project_creator = results$user_id,
+                        project_title = results$title,
+                        project_type = results$project_type,
+                        created_at = as_date(results$created_at))
+  projectInfo <- projectInfo %>% 
+    mutate(project_type =
+             case_when(project_type == 'umbrella' ~ 'paraguas',
+                       project_type == 'collection' ~ 'colección',
+                       .default = NA))
+  return(projectInfo)
+}
+getProjectNumbers <- function(project_id){
+  
+  projectNumbers <- tibble(project_id = numeric(),
+                           observervations = numeric(),
+                           species = numeric(),
+                           observers = numeric(),
+                           identifiers = numeric())
+  
+  api <- 'https://api.inaturalist.org/v1/observations'
+  page <- '&page=1&per_page=1'
+  call_url_observervations <- str_glue('{api}?project_id={project_id}{page}')
+  call_url_species <- str_glue('{api}/species_counts?project_id={project_id}&rank=species{page}')
+  call_url_observers <- str_glue('{api}/observers?project_id={project_id}{page}')
+  call_url_identifiers <- str_glue('{api}/identifiers?project_id={project_id}{page}')
+  
+  get_json_call_observervations <- GET(url = call_url_observervations) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  get_json_call_species <- GET(url = call_url_species) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  get_json_call_observers <- GET(url = call_url_observers) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  get_json_call_identifiers <- GET(url = call_url_identifiers) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  
+  projectNumbers <- tibble(project_id = project_id,
+                           observervations = get_json_call_observervations$total_results,
+                           species  = get_json_call_species$total_results,
+                           observers = get_json_call_observers$total_results,
+                           identifiers = get_json_call_identifiers$total_results)
+  return(projectNumbers)
+}
+
+getStateName <- function(place_id){
+  
+  api <- 'https://api.inaturalist.org/v1/places'
+  call_url <- str_glue('{api}/{place_id}?admin_level=10')
+  get_json_call <- GET(url = call_url) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  
+  results <- as_tibble(get_json_call$results)
+  
+  if(get_json_call$total_results == 0) {
+    place <- tibble(place_id = place_id,
+                    place_state_name = NA)
+  } else {
+    place <- tibble(place_id = results$id,
+                    place_state_name = results$name)
+  }
+  return(place$place_state_name)
+}
+getCountryName <- function(place_id){
+  
+  api <- 'https://api.inaturalist.org/v1/places'
+  call_url <- str_glue('{api}/{place_id}?admin_level=0')
+  get_json_call <- GET(url = call_url) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  
+  results <- as_tibble(get_json_call$results)
+  if(get_json_call$total_results == 0) {
+    place <- tibble(place_id = place_id,
+                    place_country_name = NA)
+  } else {
+    place <- tibble(place_id = results$id,
+                    place_country_name = results$name)
+  }
+  return(place$place_country_name)
+}
+getTaxonInfo <- function(taxon_ids){
+  
+  taxon_ids <- str_c(taxon_ids, collapse=',')
+  
+  taxonInfo <- tibble(taxon_id = numeric(),
+                      taxon_name = character(),
+                      taxon_rank = character(),
+                      iconic_taxon_name = character(),
+                      num_observations = character(),
+                      conservation_status = character())
+  
+  api <- 'https://api.inaturalist.org/v1/taxa'
+  call_url <- str_glue('{api}/{taxon_ids}',
+                         '?rank_level=10')
+
+  get_json_call <- GET(url = call_url) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  
+  results <- as_tibble(get_json_call$results)
+  
+  taxonInfo <- tibble(taxon_id = results$id,
+                        taxon_name = results$name,
+                        taxon_rank = results$rank,
+                        iconic_taxon_name = results$iconic_taxon_name,
+                        num_observations = results$observations_count,
+                        conservation_status = results$conservation_statuses)
+
+  if(exists('conservation_status', where=taxonInfo)){
+    taxonStatus <- taxonInfo %>% 
+      unnest(conservation_status, names_sep = "_") %>%
+      rename(conservation_place_name=conservation_status_place.name) %>% 
+      mutate(conservation_place_name =
+               ifelse(exists('conservation_status_place.name',
+                             envir = as.environment(.)),
+                      taxonStatus$conservation_status_place.name, NA)) %>%
+      filter((is.na(conservation_place_name) &
+                grepl('iucn', conservation_status_authority, ignore.case = T)) | 
+               conservation_place_name == 'Uruguay') %>% 
+      select(taxon_id, status=conservation_status_status, 
+             authority=conservation_status_authority,
+             place_name=conservation_place_name,
+             description=conservation_status_description) %>%
+      mutate(place_name = ifelse(is.na(place_name), 'global', place_name))
+
+  } 
+  taxonInfo <- left_join(taxonInfo, taxonStatus) %>% select(-conservation_status) 
+  
+  Sys.sleep(0.5)
+  return(taxonInfo)
+}
+getProjectData <- function(project_ids){
+  
+  project_ids <- str_c(project_ids, collapse=',')
+
+  projectData <- tibble(observation_id = numeric(),
+                        quality_grade = character(),
+                        captive = character(),
+                        taxon_name = character(),
+                        taxon_rank = character(),
+                        taxon_id = numeric(),
+                        observations_count = numeric(),
+                        conservation_status = character(),
+                        threatened = character(),
+                        endemic = character(),
+                        introduced = character(),
+                        iconic_taxa = character(),
+                        taxon_common_name = character(),
+                        created_at = date(), 
+                        observed_on = date(), 
+                        time_observed_at = date(),
+                        uri = character(),
+                        user_login = character(),
+                        user_name = character(),
+                        user_created_at = character(),
+                        user_site_id = numeric(),
+                        user_observations_count = numeric(),
+                        latitude = numeric(), 
+                        longitude = numeric(),
+                        place_ids = numeric(),
+                        geoprivacy = character())
+ 
+  api <- 'https://api.inaturalist.org/v1/observations'
+  
+  total_results <- GET(url = str_glue('{api}/?',
+                                        'project_id={project_ids}&',
+                                        'page=1&',
+                                        'per_page=1')) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  total_results <- total_results$total_results
+  cat(str_glue('{total_results} observations found in total'), 
+      '\n downloading ...\n')
+
+  per_page = 200 
+  for(page in 1:ceiling(total_results/per_page)) {
+    cat(str_glue('page {page} of {ceiling(total_results/per_page)} done'), '\n')
+    
+    call_url <- str_glue('{api}/?',
+                         'project_id={project_ids}&',
+                         'page={page}&',
+                         'per_page={per_page}')
+
+    get_json_call <- GET(url = call_url) %>%
+      content(as = "text") %>% fromJSON(flatten = TRUE)
+    
+    results <- as_tibble(get_json_call$results)
+    projectData_i <- tibble(observation_id = results$id,
+                            quality_grade = results$quality_grade,
+                            captive = results$captive,
+                            taxon_name = results$taxon.name,
+                            taxon_rank = results$taxon.rank,
+                            taxon_id = results$taxon.id,
+                            observations_count = results$taxon.observations_count,
+                            #conservation status doesn't exist, is NA
+                            conservation_status = 
+                              ifelse(exists('taxon.conservation_status.status', 
+                                             where=results),
+                                      results$taxon.conservation_status.status, NA),
+                            threatened = results$taxon.threatened,
+                            endemic = results$taxon.endemic,
+                            introduced = results$taxon.introduced,
+                            iconic_taxa = results$taxon.iconic_taxon_name,
+                            taxon_common_name = results$taxon.preferred_common_name,
+                            created_at = results$created_at,
+                            observed_on = results$observed_on,
+                            time_observed_at = results$time_observed_at,
+                            uri = results$uri,
+                            user_login = results$user.login,
+                            user_name = results$user.name,
+                            user_created_at = results$user.created_at,
+                            user_site_id = results$user.site_id,
+                            user_observations_count = results$user.observations_count,
+                            geojson.coordinates = results$geojson.coordinates,
+                            place_ids = results$place_ids,
+                            geoprivacy = results$geoprivacy) %>%
+      unnest_wider(geojson.coordinates, names_sep = "_") %>%
+      rename(longitude=geojson.coordinates_1, 
+             latitude=geojson.coordinates_2) %>% 
+      unnest_wider(place_ids, names_sep = "_") %>%
+      select(-(num_range('place_ids_', c(3:15)))) 
+
+    projectData <- rbind(projectData, projectData_i)
+    Sys.sleep(2)
+  }
+  
+  projectData <- projectData %>% 
+    mutate(user_site_id = case_when(user_site_id == 28 ~ 'NaturalistaUY',
+                                    user_site_id == 1 ~ 'iNaturalist',
+                                    user_site_id == 2 ~ 'iNaturalistMX',
+                                    user_site_id == 3 ~ 'iNaturalistNZ',
+                                    user_site_id == 5 ~ 'iNaturalist.ca',
+                                    user_site_id == 6 ~ 'NaturalistaCO',
+                                    user_site_id == 8 ~ 'BioDiversity4All',
+                                    user_site_id == 9 ~ 'iNaturalistAU',
+                                    user_site_id == 13 ~ 'iNaturalistPa',
+                                    user_site_id == 14 ~ 'iNaturalistEc',
+                                    user_site_id == 15 ~ 'iNaturalistil',
+                                    user_site_id == 16 ~ 'ArgentiNat',
+                                    user_site_id == 17 ~ 'NaturalistaCR',
+                                    user_site_id == 18 ~ 'iNaturalistCL',
+                                    user_site_id == 20 ~ 'iNaturalistFi',
+                                    user_site_id == 21 ~ 'iNaturalist.Se',
+                                    user_site_id == 22 ~ 'Natusfera',
+                                    user_site_id == 23 ~ 'iNaturalistGR',
+                                    user_site_id == 24 ~ 'iNaturalistGT',
+                                    user_site_id == 25 ~ 'iNaturalistUK',
+                                    user_site_id == 26 ~ 'iNaturalist.LU',
+                                    user_site_id == 27 ~ 'iNaturalistTW',
+                                    user_site_id == 27 ~ 'iNaturalistTW',
+                                    user_site_id == 29 ~ 'iNaturalistsAfr',
+                                    .default = NA))
+  
+  countryAndState <- projectData %>% 
+    distinct(place_ids_1, place_ids_2) %>% 
+    mutate(country_name = map_chr(place_ids_1, getCountryName),
+           state_name = map_chr(place_ids_2, getStateName))
+    
+  projectData <- left_join(projectData, countryAndState,
+                           by = join_by(place_ids_1, place_ids_2)) %>% 
+    select(-c(place_ids_1, place_ids_2))
+  
+  return(projectData)
+}
+
+getUserInfo <- function(user_id){
+  
+  userInfo <- tibble(user_id = numeric(),
+                     user_login = character(),
+                     user_name = character(),
+                     user_created_at = character(),
+                     observations_count = numeric(),
+                     identifications_count = numeric(),
+                     activity_count = numeric(),
+                     species_count = numeric(),
+                     site_id = numeric())
+  
+  api <- 'https://api.inaturalist.org/v1/users'
+  call_url <- str_glue('{api}/{user_id}')
+  get_json_call <- GET(url = call_url) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  results <- as_tibble(get_json_call$results)
+  
+  userInfo <- tibble(user_id = results$id,
+                     user_login = results$login,
+                     user_name = results$name,
+                     user_created_at = as_date(results$created_at),
+                     observations_count = results$observations_count,
+                     identifications_count = results$identifications_count,
+                     species_count = results$species_count,
+                     activity_count  = results$activity_count,
+                     site_id = results$site_id)
+  userInfo <- userInfo %>% 
+    mutate(user_url = str_glue('https://www.naturalista.uy/people/{user_login}')) %>% 
+    mutate(site_id = case_when(site_id == 28 ~ 'NaturalistaUY',
+                               site_id == 1 ~ 'iNaturalist',
+                               site_id == 2 ~ 'iNaturalistMX',
+                               site_id == 3 ~ 'iNaturalistNZ',
+                               site_id == 5 ~ 'iNaturalist.ca',
+                               site_id == 6 ~ 'NaturalistaCO',
+                               site_id == 8 ~ 'BioDiversity4All',
+                               site_id == 9 ~ 'iNaturalistAU',
+                               site_id == 13 ~ 'iNaturalistPa',
+                               site_id == 14 ~ 'iNaturalistEc',
+                               site_id == 15 ~ 'iNaturalistil',
+                               site_id == 16 ~ 'ArgentiNat',
+                               site_id == 17 ~ 'NaturalistaCR',
+                               site_id == 18 ~ 'iNaturalistCL',
+                               site_id == 20 ~ 'iNaturalistFi',
+                               site_id == 21 ~ 'iNaturalist.Se',
+                               site_id == 22 ~ 'Natusfera',
+                               site_id == 23 ~ 'iNaturalistGR',
+                               site_id == 24 ~ 'iNaturalistGT',
+                               site_id == 25 ~ 'iNaturalistUK',
+                               site_id == 26 ~ 'iNaturalist.LU',
+                               site_id == 27 ~ 'iNaturalistTW',
+                               site_id == 27 ~ 'iNaturalistTW',
+                               site_id == 29 ~ 'iNaturalistsAfr',
+                               .default = NA))
+  return(userInfo)
+}
+checkNewUsers <- function(user_list){
+  i <- 1
+  newUsers <- tibble(user_login = numeric(),
+                     user_created_at = character())
+  
+  cat(str_glue('{length(user_list)} users in total'), 
+      '\n downloading info ...\n')
+  
+  for(user in user_list) {
+    info_del_user <- getUserInfo(user)
+    cat(str_glue('{i}. @{user} \n\n'))
+    newUser_i <- tibble(user_login = info_del_user$user_login,
+                        user_created_at =info_del_user$user_created_at)
+    newUsers <- rbind(newUsers, newUser_i)
+    i <- i+1
+    Sys.sleep(0.5)
+  }
+  return(newUsers)
+}
+getProjectIdentifiers <- function(project_id){
+  
+  projectIdentifiers <- tibble(project_id = numeric(),
+                               user_id = numeric(),
+                               user_login = character(),
+                               project_id_count = numeric(),
+                               platform_id_count = numeric(),
+                               user_site_id = numeric())
+  
+  api <- 'https://api.inaturalist.org/v1/observations/identifiers'
+  call_url <- str_glue('{api}?project_id={project_id}')
+  get_json_call <- GET(url = call_url) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  results <- as_tibble(get_json_call$results)
+  
+  projectIdentifiers <- tibble(project_id = project_id,
+                               user_id = results$user_id,
+                               user_login = results$user.login,
+                               project_id_count = results$count,
+                               platform_id_count = results$user.identifications_count,
+                               user_site_id = results$user.site_id)
+  
+  projectIdentifiers <- projectIdentifiers %>% 
+    mutate(user_site_id = case_when(user_site_id == 28 ~ 'NaturalistaUY',
+                                    user_site_id == 1 ~ 'iNaturalist',
+                                    user_site_id == 2 ~ 'iNaturalistMX',
+                                    user_site_id == 3 ~ 'iNaturalistNZ',
+                                    user_site_id == 5 ~ 'iNaturalist.ca',
+                                    user_site_id == 6 ~ 'NaturalistaCO',
+                                    user_site_id == 8 ~ 'BioDiversity4All',
+                                    user_site_id == 9 ~ 'iNaturalistAU',
+                                    user_site_id == 13 ~ 'iNaturalistPa',
+                                    user_site_id == 14 ~ 'iNaturalistEc',
+                                    user_site_id == 15 ~ 'iNaturalistil',
+                                    user_site_id == 16 ~ 'ArgentiNat',
+                                    user_site_id == 17 ~ 'NaturalistaCR',
+                                    user_site_id == 18 ~ 'iNaturalistCL',
+                                    user_site_id == 20 ~ 'iNaturalistFi',
+                                    user_site_id == 21 ~ 'iNaturalist.Se',
+                                    user_site_id == 22 ~ 'Natusfera',
+                                    user_site_id == 23 ~ 'iNaturalistGR',
+                                    user_site_id == 24 ~ 'iNaturalistGT',
+                                    user_site_id == 25 ~ 'iNaturalistUK',
+                                    user_site_id == 26 ~ 'iNaturalist.LU',
+                                    user_site_id == 27 ~ 'iNaturalistTW',
+                                    user_site_id == 27 ~ 'iNaturalistTW',
+                                    user_site_id == 29 ~ 'iNaturalistsAfr',
+                                    .default = NA))
+  return(projectIdentifiers)
+}
+getTaxonCount <- function(taxon_ids, place_id = 7259){
+  
+  taxon_ids <- str_c(taxon_ids, collapse=',')
+  
+  taxonCount <- tibble(taxon_id = numeric(),
+                       taxon_name = character(),
+                       taxon_rank = character(),
+                       observations_place = numeric(),
+                       observations_iNat = numeric())
+
+  api <- 'https://api.inaturalist.org/v1/observations/species_counts'
+  
+  total_results <- GET(url = str_glue('{api}/?',
+                                      'verifiable=true&',
+                                      'place_id={place_id}&', 
+                                      'taxon_id={taxon_ids}&',
+                                      'page=1&',
+                                      'per_page=1')) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  total_results <- total_results$total_results
+  
+  cat(str_glue('{total_results} observations found in total'), 
+      '\n downloading ...\n')
+  
+  per_page = 500 
+  for(page in 1:ceiling(total_results/per_page)) {
+    cat(str_glue('page {page} of {ceiling(total_results/per_page)} done'), '\n')
+    
+    call_url <- str_glue('{api}/?',
+                         'verifiable=true&',
+                         'place_id={place_id}&', 
+                         'taxon_id={taxon_ids}&',
+                         'page={page}&',
+                         'per_page={per_page}')
+    
+    get_json_call <- GET(url = call_url) %>%
+      content(as = "text") %>% fromJSON(flatten = TRUE)
+    
+    results <- as_tibble(get_json_call$results)
+    taxonCount_i <- tibble(taxon_id = results$taxon.id,
+                            taxon_name = results$taxon.name,
+                            taxon_rank = results$taxon.rank,
+                            observations_place = results$count,
+                            observations_iNat = results$taxon.observations_count)
+    
+    taxonCount <- rbind(taxonCount, taxonCount_i)
+    Sys.sleep(2)
+  }
+  return(taxonCount)
+}
+getObservationPhoto <- function(observation_id){
+  
+  observationInfo <- tibble(observation_id = numeric(),
+                            photo_taxon_medium = character(),
+                            photo_taxon_square = character(),
+                            photo_observation = character())
+  
+  api <- 'https://api.inaturalist.org/v1/observations'
+  call_url <- str_glue('{api}/{observation_id}')
+  
+  get_json_call <- GET(url = call_url) %>%
+    content(as = "text") %>% fromJSON(flatten = TRUE)
+  
+  results <- as_tibble(get_json_call$results)
+  
+  observationInfo <- tibble(observation_id = results$id,
+                            photo_taxon_medium = results$taxon.default_photo.medium_url,
+                            photo_taxon_square = results$taxon.default_photo.url,
+                            photo_observation = results$observation_photos[[1]][1,]$photo.url)
+  
+  Sys.sleep(0.5)
+  return(observationInfo$photo_observation)
+}
+detectPeriod <- function(datos_proyecto, timecol){
+  
+  period_timecol <- datos_proyecto %>% 
+    mutate(timecol=as_datetime(eval(parse(text = timecol)))) %>% 
+    summarise(start=min(timecol, na.rm=T),
+              end=max(timecol, na.rm=T),
+              hours_active=time_length(interval(start, end), 'hours'),
+              days_active=time_length(interval(start, end), 'days'),
+              years_active=time_length(interval(start, end), 'years'))
+  
+  if(period_timecol$days_active<=2){
+    periodVariables <- tibble(timecol = timecol,
+                              count_variable = 'records_per_hour',
+                              unit_variable = '1 hour',
+                              unit_text = 'hora')
+  } else if(period_timecol$days_active>2 &
+            period_timecol$days_active<=4){
+    periodVariables <- tibble(timecol = timecol,
+                              count_variable = 'records_per_hour',
+                              unit_variable = '6 hours',
+                              unit_text = '6 horas')
+  } else if(period_timecol$days_active>4 &
+            period_timecol$days_active<=7){
+    periodVariables <- tibble(timecol = timecol,
+                              count_variable = 'records_per_day',
+                              unit_variable = '1 day',
+                              unit_text = 'día')
+  }else if(period_timecol$days_active>7 &
+            period_timecol$days_active<=365){
+    periodVariables <- tibble(timecol = timecol,
+                              count_variable = 'records_per_week',
+                              unit_variable = '1 week',
+                              unit_text = 'semana')
+  } else if(period_timecol$days_active>365 &
+            period_timecol$days_active<=730){
+    periodVariables <- tibble(timecol = timecol,
+                              count_variable = 'records_per_month',
+                              unit_variable = '1 month',
+                              unit_text = 'mes')
+  }
+  else{
+    periodVariables <- tibble(timecol = timecol,
+                              count_variable = 'records_per_year',
+                              unit_variable = '6 months',
+                              unit_text = '6 meses')
+  }
+  return(periodVariables)
+}
+
+id_proyecto <- 'gbs-2025-uruguay'
+datos_proyecto <- getProjectData(id_proyecto)
+
+user_list <- datos_proyecto %>% distinct(user_login) %>% pull
+user_list_checked <- checkNewUsers(user_list)
+
+info_del_proyecto <- getProjectInfo(id_proyecto)
+creador_del_proyecto <- getUserInfo(info_del_proyecto$project_creator)
+nums_del_proyecto <- getProjectNumbers(id_proyecto)
+taxa_list <- datos_proyecto %>%
+  filter(!is.na(taxon_id) & taxon_rank == 'species') %>%
+  distinct(taxon_id) %>% pull(taxon_id)
+
+taxonCount <- invisible(getTaxonCount(taxa_list))
+# taxonStatus <- invisible(getTaxonInfo(taxa_list))
+
+uruguay <- geodata::gadm('Uruguay', level=1) %>% st_as_sf() %>% st_cast()
+
+datos_proyecto_sf <- datos_proyecto %>% 
+    st_as_sf(coords = c("longitude", "latitude")) %>% 
+    st_set_crs(4326)
+```
+
+
+El proyecto **`r info_del_proyecto$project_title`** (id del proyecto ``r info_del_proyecto$project_slug``), es un proyecto del tipo `r info_del_proyecto$project_type`, que fue creado el `r stamp(order='%d de %B de %Y', exact = TRUE, locale='es_ES', quiet=T)(info_del_proyecto$created_at)`, por `r creador_del_proyecto$user_name` (@`r creador_del_proyecto$user_login`). 
+
+
+```{r}
+#| label: initial-map
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+mapa_observaciones <- datos_proyecto_sf %>%
+  mutate(observation_id = as.character(observation_id)) %>%
+  select(observation_id, 
+         taxon_name,
+         taxon_rank,
+         iconic_taxa,
+         user_login, 
+         observed_on) %>% 
+  mutate(iconic_taxa = case_when(
+    iconic_taxa == 'Mammalia' ~ 'Mamíferos',
+    iconic_taxa == 'Aves' ~ 'Aves',
+    iconic_taxa == 'Reptilia' ~ 'Reptiles',
+    iconic_taxa == 'Animalia' ~ 'Otros animales',
+    iconic_taxa == 'Amphibia' ~ 'Anfibios',
+    iconic_taxa == 'Actinopterygii' ~ 'Peces con aletas radiadas',
+    iconic_taxa == 'Arachnida' ~ 'Arácnidos',
+    iconic_taxa == 'Insecta' ~ 'Insectos',
+    iconic_taxa == 'Mollusca' ~ 'Moluscos',
+    iconic_taxa == 'Chromista' ~ 'Chromista',
+    iconic_taxa == 'Plantae' ~ 'Plantas',
+    iconic_taxa == 'Fungi' ~ 'Hongos',
+    iconic_taxa == 'Protozoans' ~ 'Protozoarios',
+    .default = NA)) 
+
+tm_basemap("Stadia.StamenTonerBackground") +
+#   tm_shape(uruguay) +
+#     tm_borders(col='grey80')+
+  tm_shape(mapa_observaciones, 
+           name = str_glue('Observaciones del proyecto: {id_proyecto}')) +
+    tm_dots(fill = 'red',#'iconic_taxa',
+            popup.vars=c('ID observación'='observation_id',
+                         'Taxón'='taxon_name',
+                         'Rango del taxón'='taxon_rank',
+                         'Grupo' ='iconic_taxa',
+                         'Usuario'='user_login',
+                         'Fecha de observación'='observed_on')) 
+```
+
+<br>
+
+```{r}
+#| label: project-cards
+#| echo: false
+#| eval: true
+#| message: false
+
+card_observervations <- value_box(
+  title = "Observaciones",
+  value = nums_del_proyecto$observervations,
+  showcase = bsicons::bs_icon("binoculars-fill"),
+  theme = value_box_theme(bg = "#80aa33", fg = "#f8f8f8"),
+)
+
+card_species <- value_box(
+  title = "Especies",
+  value = nums_del_proyecto$species,
+  showcase = bsicons::bs_icon("flower1"),
+  theme = value_box_theme(bg = "#80aa33", fg = "#f8f8f8"),
+)
+
+card_observers <- value_box(
+  title = "Observadores",
+  value = nums_del_proyecto$observers,
+  showcase = bsicons::bs_icon("person-walking"),
+  theme = value_box_theme(bg = "#80aa33", fg = "#f8f8f8"),
+)
+
+card_identifiers <- value_box(
+  title = "Identificadores",
+  value = nums_del_proyecto$identifiers,
+  showcase = bsicons::bs_icon("fingerprint"),
+  theme = value_box_theme(bg = "#80aa33", fg = "#f8f8f8"),
+)
+
+layout_column_wrap(
+  width = 100, height = 250,
+  card_observervations,
+  card_species,
+  card_observers,
+  card_identifiers)  
+  
+```
+
+---
+
+## Observadores
+
+```{r}
+#| label: data-observers
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+mean_observations <- datos_proyecto %>% 
+    group_by(user_login) %>%
+    summarise(n_records = n()) %>% 
+    summarise(mean_n_records = mean(n_records))
+
+mean_species <- datos_proyecto %>% 
+  filter(taxon_rank=='species') %>% 
+    group_by(user_login) %>%
+    summarise(n_species = n_distinct(taxon_name)) %>% 
+    summarise(mean_n_species = mean(n_species))
+
+main_site_id <- datos_proyecto %>%
+  distinct(user_login, .keep_all = T) %>% 
+  group_by(user_site_id) %>% count() %>% 
+  ungroup() %>%
+  mutate(percent = (scales::label_percent())(round(n/sum(n),3))) %>% 
+    arrange(desc(n)) %>% slice_head(n=1)
+```
+
+### Cantidad de personas
+
+En total, participaron **`r nums_del_proyecto$observers`** personas cargando observaciones a este proyecto.   
+El `r main_site_id$percent` de las personas (**`r main_site_id$n`**) está afiliada al sitio `r main_site_id$user_site_id`.  
+
+### Aportes
+
+Cada persona cargó en promedio **`r round(mean_observations$mean_n_records,1)`** registros y reportó **`r round(mean_species$mean_n_species,1)`** especies al proyecto.
+
+### Top 10 de observadores
+
+```{r}
+#| label: top10-observers
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+datos_proyecto %>% 
+  filter(taxon_rank=='species') %>% 
+  group_by(user_login) %>%
+  summarise(n_records=n(),
+            n_species=n_distinct(taxon_name[taxon_rank=='species']),
+            user_site_id = unique(user_site_id),
+            user_observations_count = unique(user_observations_count)) %>% 
+  arrange(desc(n_species)) %>% 
+  head(n=10) %>% 
+  select(Usuario=user_login, 
+         Observaciones=n_records,
+         Especies=n_species,
+         `Afiliación`=user_site_id,
+         `Observaciones en la plataforma` = user_observations_count) %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+```
+
+### Experiencia en la plataforma (usuarios nuevos)
+
+```{r}
+#| label: observers-experience
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+new_users <- user_list_checked %>% 
+    mutate(new = ifelse(user_created_at > info_del_proyecto$created_at, 
+                        'yes', 'no')) %>% 
+    group_by(new) %>% count() %>% ungroup() %>% 
+    mutate(percent = (scales::label_percent())(round(n/sum(n),3))) 
+```
+
+Del total de **`r nums_del_proyecto$observers`** usuarios que cargaron observaciones al proyecto, **`r new_users[new_users$new=='yes',]$n`** (`r new_users[new_users$new=='yes',]$percent`) crearon su cuenta luego de creado este proyecto.
+
+## Identificaciones
+
+Un total de `r nums_del_proyecto$identifiers` personas contribuyeron al proyecto con identificaciones.
+
+### Top 10 de identificadores
+
+```{r}
+#| label: top10-identificadores
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+project_identifiers <- getProjectIdentifiers('gbs-2024-uruguay')
+
+project_identifiers %>% 
+  arrange(desc(project_id_count)) %>% 
+  head(n=10) %>% 
+  select(Usuario=user_login,
+         `Afiliación` = user_site_id,
+         `Identificaciones en el proyecto` = project_id_count,
+         `Identificaciones en la plataforma` = platform_id_count) %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+```
+
+
+### Calidad de las observaciones
+
+¿Cuántos registros alcanzaron el 'Grado de investigación'?
+
+```{r}
+#| label: data-quality
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+#| layout-ncol: 2
+
+research_grade <- '#afcb41'
+needs_id <- '#fcef9d'
+casual <- '#aaaaaa'
+
+estadisticas_calidad <- datos_proyecto %>%
+  group_by(quality_grade) %>%
+  count() %>%
+  ungroup() %>% 
+  mutate(percent = (scales::label_percent())(round(n/sum(n),
+        3))) %>% 
+  mutate(quality_grade = case_when(
+    quality_grade == 'needs_id' ~ 'Necesita identificación',
+    quality_grade == 'research' ~ 'Grado de investigación',
+    .default = NA))
+
+ggplotly(
+  ggplot(data=estadisticas_calidad,
+       aes(x='', y=n, fill=quality_grade)) +
+  geom_bar(stat='identity') + 
+  scale_fill_manual(values= c(research_grade, needs_id)) + 
+  ggpubr::theme_pubclean() + 
+  theme(legend.position = 'bottom',
+        axis.title.y =  element_text(vjust = 10)) +
+  labs(x='', y='Número de observaciones', fill='') +
+  geom_col(aes(text = paste0(
+    'Calidad: ', quality_grade, '<br>',
+    'Observaciones: ', n, ' (', percent, ')'
+    ))),
+  tooltip = 'text', dynamicTicks = T)
+
+estadisticas_calidad_taxon <- datos_proyecto %>%
+    filter(quality_grade=='needs_id') %>% 
+    group_by(iconic_taxa) %>%
+    count() %>% ungroup() %>% 
+    mutate(percent = (scales::label_percent())(round(n/sum(n), 3))) %>% 
+    mutate(iconic_taxa = case_when(
+        iconic_taxa == 'Mammalia' ~ 'Mamíferos',
+        iconic_taxa == 'Aves' ~ 'Aves',
+        iconic_taxa == 'Reptilia' ~ 'Reptiles',
+        iconic_taxa == 'Animalia' ~ 'Otros animales',
+        iconic_taxa == 'Amphibia' ~ 'Anfibios',
+        iconic_taxa == 'Actinopterygii' ~ 'Peces con aletas radiadas',
+        iconic_taxa == 'Arachnida' ~ 'Arácnidos',
+        iconic_taxa == 'Insecta' ~ 'Insectos',
+        iconic_taxa == 'Mollusca' ~ 'Moluscos',
+        iconic_taxa == 'Chromista' ~ 'Chromista',
+        iconic_taxa == 'Plantae' ~ 'Plantas',
+        iconic_taxa == 'Fungi' ~ 'Hongos',
+        iconic_taxa == 'Protozoans' ~ 'Protozoarios',
+        .default = NA)) 
+
+
+ggplotly(
+  ggplot(data= estadisticas_calidad_taxon,
+         aes(x='', y=n, fill=iconic_taxa)) +
+  geom_bar(stat='identity', position = 'fill') + 
+  scale_fill_manual(values = colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(12)) +
+  ggpubr::theme_pubclean() + 
+  theme(legend.position = 'bottom', 
+        axis.title.y = element_text(vjust = 3)) +
+  labs(x='', y='Número de observaciones que Necesitan ID', fill='') + 
+  geom_col(aes(text = paste0(
+    'Grupo: ', iconic_taxa, '<br>',
+    'Observaciones: ', n, ' (', percent, ')'))), 
+  tooltip = 'text')
+```
+
+## Cobertura taxonómica
+
+Del un total de `r length(unique(datos_proyecto$taxon_name))` taxones registrados, **`r nums_del_proyecto$species`** han sido identificados a nivel de especie.
+
+```{r}
+#| label: data-taxa
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+#| layout-ncol: 2
+
+estadisticas_taxones_obs <- datos_proyecto %>%
+  group_by(iconic_taxa) %>%
+  count() %>%
+  ungroup() %>% 
+  mutate(percent = (scales::label_percent())(round(n/sum(n),
+        3))) %>% 
+  mutate(iconic_taxa = case_when(
+    iconic_taxa == 'Mammalia' ~ 'Mamíferos',
+    iconic_taxa == 'Aves' ~ 'Aves',
+    iconic_taxa == 'Reptilia' ~ 'Reptiles',
+    iconic_taxa == 'Animalia' ~ 'Otros animales',
+    iconic_taxa == 'Amphibia' ~ 'Anfibios',
+    iconic_taxa == 'Actinopterygii' ~ 'Peces con aletas radiadas',
+    iconic_taxa == 'Arachnida' ~ 'Arácnidos',
+    iconic_taxa == 'Insecta' ~ 'Insectos',
+    iconic_taxa == 'Mollusca' ~ 'Moluscos',
+    iconic_taxa == 'Chromista' ~ 'Chromista',
+    iconic_taxa == 'Plantae' ~ 'Plantas',
+    iconic_taxa == 'Fungi' ~ 'Hongos',
+    iconic_taxa == 'Protozoans' ~ 'Protozoarios',
+    .default = NA)) 
+
+ggplotly(
+  ggplot(data= estadisticas_taxones_obs,
+         aes(x='', y=n, fill=iconic_taxa)) +
+  geom_bar(stat='identity', position = 'fill') + 
+  scale_fill_manual(values = colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(12)) +
+  ggpubr::theme_pubclean() + 
+  theme(legend.position = 'bottom', 
+        axis.title.y = element_text(vjust = 3)) +
+  labs(x='', y='Número de observaciones', fill='') + 
+  geom_col(aes(text = paste0(
+    'Grupo: ', iconic_taxa, '<br>',
+    'Observaciones: ', n, ' (', percent, ')'))), 
+  tooltip = 'text')
+
+estadisticas_taxones <- datos_proyecto %>%
+  distinct(taxon_name, .keep_all = T) %>% 
+  group_by(iconic_taxa) %>%
+  count() %>%
+  ungroup() %>% 
+  mutate(percent = (scales::label_percent())(round(n/sum(n),
+        3))) %>% 
+  mutate(iconic_taxa = case_when(
+    iconic_taxa == 'Mammalia' ~ 'Mamíferos',
+    iconic_taxa == 'Aves' ~ 'Aves',
+    iconic_taxa == 'Reptilia' ~ 'Reptiles',
+    iconic_taxa == 'Animalia' ~ 'Otros animales',
+    iconic_taxa == 'Amphibia' ~ 'Anfibios',
+    iconic_taxa == 'Actinopterygii' ~ 'Peces con aletas radiadas',
+    iconic_taxa == 'Arachnida' ~ 'Arácnidos',
+    iconic_taxa == 'Insecta' ~ 'Insectos',
+    iconic_taxa == 'Mollusca' ~ 'Moluscos',
+    iconic_taxa == 'Chromista' ~ 'Chromista',
+    iconic_taxa == 'Plantae' ~ 'Plantas',
+    iconic_taxa == 'Fungi' ~ 'Hongos',
+    iconic_taxa == 'Protozoans' ~ 'Protozoarios',
+    .default = NA)) 
+
+ggplotly(
+  ggplot(data= estadisticas_taxones,
+         aes(x='', y=n, fill=iconic_taxa)) +
+  geom_bar(stat='identity', position = 'fill') + 
+  scale_fill_manual(values = colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))(12)) +
+  ggpubr::theme_pubclean() + 
+  theme(legend.position = 'bottom', 
+        axis.title.y = element_text(vjust = 3)) +
+  labs(x='', y='Número de especies', fill='') + 
+  geom_col(aes(text = paste0(
+    'Grupo: ', iconic_taxa, '<br>',
+    'Especies: ', n, ' (', percent, ')'))), 
+  tooltip = 'text')
+```
+
+### Más populares
+
+Las especies más registradas en el evento (por grupo) son:
+
+```{r}
+#| label: popular-taxa
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+datos_proyecto %>%
+    filter(taxon_rank == 'species') %>% 
+    group_by(iconic_taxa,taxon_name) %>%
+    count() %>% 
+    group_by(iconic_taxa) %>% 
+    filter(n == max(n)) %>% 
+    mutate(iconic_taxa = case_when(
+      iconic_taxa == 'Mammalia' ~ 'Mamíferos',
+      iconic_taxa == 'Aves' ~ 'Aves',
+      iconic_taxa == 'Reptilia' ~ 'Reptiles',
+      iconic_taxa == 'Animalia' ~ 'Otros animales',
+      iconic_taxa == 'Amphibia' ~ 'Anfibios',
+      iconic_taxa == 'Actinopterygii' ~ 'Peces con aletas radiadas',
+      iconic_taxa == 'Arachnida' ~ 'Arácnidos',
+      iconic_taxa == 'Insecta' ~ 'Insectos',
+      iconic_taxa == 'Mollusca' ~ 'Moluscos',
+      iconic_taxa == 'Chromista' ~ 'Chromista',
+      iconic_taxa == 'Plantae' ~ 'Plantas',
+      iconic_taxa == 'Fungi' ~ 'Hongos',
+      iconic_taxa == 'Protozoans' ~ 'Protozoarios',
+      .default = NA)) %>% 
+  arrange(iconic_taxa) %>% 
+  select(Grupo = iconic_taxa,
+         Especie = taxon_name,
+         `Número de observaciones` = n) %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+```
+
+### Más raras
+
+Las especies más raras en iNaturalist (por grupo) son:
+
+```{r}
+#| label: rare-taxa
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+left_join(datos_proyecto %>% distinct(taxon_name,.keep_all = T), taxonCount) %>%
+  arrange(observations_place) %>% 
+  filter(!is.na(observations_place)) %>% 
+    group_by(iconic_taxa,taxon_name) %>%
+    filter(observations_place == min(observations_place)) %>% 
+    group_by(iconic_taxa) %>% filter(observations_place == min(observations_place)) %>% 
+    mutate(iconic_taxa = case_when(
+      iconic_taxa == 'Mammalia' ~ 'Mamíferos',
+      iconic_taxa == 'Aves' ~ 'Aves',
+      iconic_taxa == 'Reptilia' ~ 'Reptiles',
+      iconic_taxa == 'Animalia' ~ 'Otros animales',
+      iconic_taxa == 'Amphibia' ~ 'Anfibios',
+      iconic_taxa == 'Actinopterygii' ~ 'Peces con aletas radiadas',
+      iconic_taxa == 'Arachnida' ~ 'Arácnidos',
+      iconic_taxa == 'Insecta' ~ 'Insectos',
+      iconic_taxa == 'Mollusca' ~ 'Moluscos',
+      iconic_taxa == 'Chromista' ~ 'Chromista',
+      iconic_taxa == 'Plantae' ~ 'Plantas',
+      iconic_taxa == 'Fungi' ~ 'Hongos',
+      iconic_taxa == 'Protozoans' ~ 'Protozoarios',
+      .default = NA)) %>% 
+  arrange(iconic_taxa) %>% 
+  select(Grupo = iconic_taxa,
+         Especie = taxon_name,
+         `Número de observaciones en iNat` = observations_place) %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+```
+
+### Especies nuevas
+
+¿Se registraron especies nuevas para el país?
+
+```{r}
+#| label: new-taxa-place
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+new_taxa_place <- left_join(datos_proyecto %>% distinct(taxon_name,.keep_all = T),
+                      taxonCount) %>%
+  arrange(observations_place) %>% 
+  filter(!is.na(observations_place)) %>% 
+  filter(observations_place<2) %>% 
+  distinct(taxon_name, iconic_taxa, threatened, introduced, uri, observation_id, quality_grade) %>% 
+  arrange(iconic_taxa, taxon_name) %>% 
+  mutate(quality_grade = case_when(
+    quality_grade == 'research' ~ 'Grado de investigación',
+    quality_grade == 'needs_id' ~ 'Necesita identificación',
+    .default = NA)) %>% 
+  mutate(iconic_taxa = case_when(
+      iconic_taxa == 'Mammalia' ~ 'Mamíferos',
+      iconic_taxa == 'Aves' ~ 'Aves',
+      iconic_taxa == 'Reptilia' ~ 'Reptiles',
+      iconic_taxa == 'Animalia' ~ 'Otros animales',
+      iconic_taxa == 'Amphibia' ~ 'Anfibios',
+      iconic_taxa == 'Actinopterygii' ~ 'Peces con aletas radiadas',
+      iconic_taxa == 'Arachnida' ~ 'Arácnidos',
+      iconic_taxa == 'Insecta' ~ 'Insectos',
+      iconic_taxa == 'Mollusca' ~ 'Moluscos',
+      iconic_taxa == 'Chromista' ~ 'Chromista',
+      iconic_taxa == 'Plantae' ~ 'Plantas',
+      iconic_taxa == 'Fungi' ~ 'Hongos',
+      iconic_taxa == 'Protozoans' ~ 'Protozoarios',
+      .default = NA)) %>% 
+  mutate(threatened = ifelse(threatened == TRUE, 'sí', NA),
+         introduced = ifelse(introduced == TRUE, 'sí', NA)) %>% 
+  mutate(uri = str_replace(uri, 'inaturalist.org', 'naturalista.uy'))%>% 
+  rename(Especie = taxon_name,
+         Grupo = iconic_taxa,
+         `¿Amenzada?` = threatened,
+         `¿Introducida?` = introduced,
+         Calidad = quality_grade,
+         URL=uri) %>% 
+  mutate(photo=map_chr(observation_id, getObservationPhoto))
+
+if(nrow(new_taxa_place)==0) {
+  cat('No se encontaron registros de espcies nuevas para el país \n\n')
+} else {
+  new_taxa_place %>% select(-observation_id) %>% mutate(photo='') %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ",")) %>% 
+  kableExtra::column_spec(5, link = new_taxa_place$URL) %>% 
+  kableExtra::column_spec(7, image = kableExtra::spec_image(new_taxa_place$photo, 280, 200))
+}
+```
+
+<br>
+
+Y ¿para la plataforma?
+
+```{r}
+#| label: new-taxa-iNat
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+new_taxa_platform <- left_join(datos_proyecto %>% distinct(taxon_name,.keep_all = T),
+                      taxonCount) %>%
+  arrange(observations_iNat) %>% 
+  filter(!is.na(observations_iNat)) %>% 
+  filter(observations_iNat<2) %>% 
+  distinct(taxon_name, iconic_taxa, threatened, introduced, uri, observation_id) %>% 
+  arrange(iconic_taxa, taxon_name) %>% 
+  mutate(iconic_taxa = case_when(
+      iconic_taxa == 'Mammalia' ~ 'Mamíferos',
+      iconic_taxa == 'Aves' ~ 'Aves',
+      iconic_taxa == 'Reptilia' ~ 'Reptiles',
+      iconic_taxa == 'Animalia' ~ 'Otros animales',
+      iconic_taxa == 'Amphibia' ~ 'Anfibios',
+      iconic_taxa == 'Actinopterygii' ~ 'Peces con aletas radiadas',
+      iconic_taxa == 'Arachnida' ~ 'Arácnidos',
+      iconic_taxa == 'Insecta' ~ 'Insectos',
+      iconic_taxa == 'Mollusca' ~ 'Moluscos',
+      iconic_taxa == 'Chromista' ~ 'Chromista',
+      iconic_taxa == 'Plantae' ~ 'Plantas',
+      iconic_taxa == 'Fungi' ~ 'Hongos',
+      iconic_taxa == 'Protozoans' ~ 'Protozoarios',
+      .default = NA)) %>% 
+  mutate(threatened = ifelse(threatened == TRUE, 'sí', NA),
+         introduced = ifelse(introduced == TRUE, 'sí', NA)) %>% 
+  mutate(uri = str_replace(uri, 'inaturalist.org', 'naturalista.uy'))%>% 
+  rename(Especie = taxon_name,
+         Grupo = iconic_taxa,
+         `¿Amenzada?` = threatened,
+         `¿Introducida?` = introduced,
+         URL=uri) %>% 
+  mutate(photo=map_chr(observation_id, getObservationPhoto))
+
+if(nrow(new_taxa_platform)==0) {
+  cat('No se encontaron registros de especies nuevas para la plataforma \n\n')
+} else {
+  new_taxa_platform %>% select(-observation_id) %>% mutate(photo='') %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ",")) %>% 
+  kableExtra::column_spec(5, link = new_taxa_platform$URL) %>% 
+  kableExtra::column_spec(6, image = kableExtra::spec_image(new_taxa_platform$photo, 280, 200))
+}
+```
+
+
+### Análisis por estados de conservación
+
+¿Se registraron especies amenazadas?
+
+```{r}
+#| label: threatened-taxa
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+threatened_col <- '#ef8a62'
+nonthreatened_col <- '#67a9cf'
+
+threteaned_taxa <- datos_proyecto %>% distinct(taxon_name, .keep_all = T) %>% 
+    group_by(threatened) %>%
+    count() %>%
+    ungroup() %>% 
+    mutate(percent = (scales::label_percent())(round(n/sum(n),
+                                                     3))) %>% 
+    mutate(threatened = case_when(
+        threatened == TRUE ~ 'Amenazada',
+        threatened == FALSE ~ 'No amenazada',
+        .default = NA))
+
+ggplotly(
+  ggplot(data=threteaned_taxa,
+       aes(x='', y=n, fill=threatened)) +
+  geom_bar(stat='identity') + 
+  scale_fill_manual(values= c(threatened_col, nonthreatened_col)) + 
+  ggpubr::theme_pubclean() + 
+  theme(legend.position = 'bottom',
+        axis.title.y =  element_text(vjust = 10)) +
+  labs(x='', y='Número de especies', fill='') +
+  geom_col(aes(text = paste0(
+    'Estatus de conservación: ', threatened, '<br>',
+    'Especies: ', n, ' (', percent, ')'
+    ))),
+  tooltip = 'text', dynamicTicks = T)
+
+print_threatened <- function() {
+  cat((datos_proyecto %>% filter(threatened) %>% distinct(taxon_name) %>% pull), sep = ', ')
+}
+```
+
+
+### Análisis por medios de establecimiento
+
+¿Se registraron especies introducidas?
+
+```{r}
+#| label: introduced-taxa
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+introduced_col <- '#e9a3c9'
+nonintroduced_col <- '#a1d76a'
+
+introduced_taxa <- datos_proyecto %>% 
+  distinct(taxon_name, .keep_all = T) %>% 
+    group_by(introduced) %>%
+    count() %>%
+    ungroup() %>% 
+    mutate(percent = (scales::label_percent())(round(n/sum(n), 3))) %>% 
+    mutate(introduced = case_when(
+        introduced == TRUE ~ 'Introducida',
+        introduced == FALSE ~ 'Nativa',
+        .default = NA))
+
+ggplotly(
+  ggplot(data=introduced_taxa,
+       aes(x='', y=n, fill=introduced)) +
+  geom_bar(stat='identity') + 
+  scale_fill_manual(values= c(introduced_col, nonintroduced_col)) + 
+  ggpubr::theme_pubclean() + 
+  theme(legend.position = 'bottom',
+        axis.title.y =  element_text(vjust = 10)) +
+  labs(x='', y='Número de especies', fill='') +
+  geom_col(aes(text = paste0(
+    'Estatus de establecimiento: ', introduced, '<br>',
+    'Especies: ', n, ' (', percent, ')'
+    ))),
+  tooltip = 'text', dynamicTicks = T)
+```
+
+## Cobertura espacial
+
+### Densidad por departamento
+
+```{r}
+#| label: spatial-state
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+registros_por_departamento <- st_join(uruguay %>%
+                                        select(NAME_1),
+                                   datos_proyecto_sf) %>% 
+  group_by(NAME_1) %>% 
+  summarise(n_records=ifelse(n_distinct(taxon_name, na.rm=T)!=0, n(), 0),
+            n_species=ifelse(n_records>0, n_distinct(taxon_name), 0)) %>% 
+  st_cast()
+
+tm_shape(uruguay) +
+    tm_fill(col='grey97', alpha = 0.8) +
+    tm_borders(col='grey80') +
+    tm_shape(registros_por_departamento %>% 
+               mutate(n_records=ifelse(n_records==0,NA,n_records))) +
+    tm_fill('n_records', alpha = 0.4,
+            palette = 'Purples', 
+            style='jenks',
+            n = 7,
+            textNA = 'Sin observaciones',
+            title = 'Observaciones',
+            popup.vars=c('Número de observaciones'='n_records')) 
+```
+
+### Registros en áreas protegidas
+
+```{r}
+#| label: spatial-pa
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+#| layout-ncol: 1
+
+raw_PA_place <- wdpa_fetch("Uruguay", wait = TRUE, download_dir = rappdirs::user_data_dir("wdpar"))
+PA_place_data <- wdpa_clean(raw_PA_place)%>% st_transform(crs=st_crs(datos_proyecto_sf))
+
+registros_en_areas_protegidas <- st_join(PA_place_data, datos_proyecto_sf) %>% 
+  group_by(NAME, DESIG) %>% 
+  summarise(NR=ifelse(n_distinct(taxon_name, na.rm=T)!=0, n(), 0),
+            SR=ifelse(NR>0, n_distinct(taxon_name), 0)) %>% 
+  st_cast()
+
+# tm_shape(uruguay, bbox=PA_place_data) +
+#     tm_fill(col='grey97', alpha = 0.8) +
+#     tm_borders(col='grey80') +
+#   tm_shape(PA_place_data) +
+#     tm_fill('NAME', alpha = 0.8, palette = 'RdYlGn', 
+#             title = 'Áreas protegidas',
+#             popup.vars=c('Área protegida'='NAME',
+#                          'Designación'='DESIG')) 
+
+
+if(nrow(registros_en_areas_protegidas %>% filter(NR!=0))==0) {
+  cat('No se encontaron registros en áreas protegidas \n\n')
+} else {
+  tm_shape(uruguay, bbox=PA_place_data) +
+    tm_fill(col='grey97', alpha = 0.8) +
+    tm_borders(col='grey80') +
+    tm_shape(registros_en_areas_protegidas %>% 
+               mutate(NR=ifelse(NR==0,NA,NR))) +
+    tm_fill('NR',  alpha = 0.8, 
+            palette = 'RdPu',
+            style='jenks',
+            # n = 7,
+            textNA = 'Sin observaciones',
+            title='Observaciones',
+            popup.vars=c('Número de observaciones'='NR'))
+}
+```
+
+### Coordenadas oscurecidas
+
+```{r}
+#| label: spatial-obscure
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+datos_proyecto %>%
+  group_by(geoprivacy) %>%
+  count() %>%
+  ungroup() %>%
+  mutate(percent = (scales::label_percent())(round(n/sum(n), 3))) %>%
+  mutate(geoprivacy = case_when(
+        geoprivacy == 'obscured' ~ 'Coordenadas oscurecidas',
+        is.na(geoprivacy) ~ 'Coordenadas públicas',
+        .default = '')) %>% 
+  rename(Geoprivacidad = geoprivacy,
+         `Número de observaciones` = n,
+         `%` = percent) %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ","))
+```
+
+Los registros con coordenadas oscurecidas son los siguientes:
+
+```{r}
+#| label: obscure-list
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+obscured <- datos_proyecto %>% 
+  filter(geoprivacy == 'obscured') %>% 
+  distinct(taxon_name, .keep_all = T) %>% 
+  select(taxon_name, user_login, state_name, uri) %>% 
+  mutate(uri = str_replace(uri, 'inaturalist.org', 'naturalista.uy'))%>% 
+  rename(Taxon = taxon_name,
+         Usuario = user_login,
+         Departamento = state_name,
+         URL = uri) 
+
+if(nrow(obscured)==0) {
+  cat('No se encontaron registros con coordenadas oscurecidas\n\n')
+} else {
+  obscured %>% 
+  kable(format.args = list(decimal.mark = '.', big.mark = ",")) %>% 
+  kableExtra::column_spec(4, link = obscured$URL)
+}
+```
+
+## Cobertura temporal
+
+### Densidad de registros por periodo de tiempo
+
+```{r}
+#| label: temporal
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+#| out-width: '100%'
+
+periodVars <- detectPeriod(datos_proyecto,
+                           timecol = 'time_observed_at')
+
+
+ggplotly(datos_proyecto %>% 
+           mutate(time_observed_at=as_datetime(time_observed_at)) %>%
+           mutate(metric=case_when(
+             periodVars$count_variable=='records_per_hour' ~ 
+               hour(time_observed_at),
+             periodVars$count_variable=='records_per_day' ~ 
+               day(time_observed_at),
+             periodVars$count_variable=='records_per_week' ~ 
+               week(time_observed_at),
+             periodVars$count_variable=='records_per_month' ~ 
+               month(time_observed_at),
+             periodVars$count_variable=='records_per_year' ~ 
+               year(time_observed_at))) %>% 
+           add_count(iconic_taxa, 
+                     metric,
+                     name=periodVars$count_variable) %>%
+           mutate(time_observed_at=ceiling_date(time_observed_at,
+                                                unit=periodVars$unit_variable)) %>%
+           distinct(time_observed_at, .keep_all = T) %>% 
+           mutate(label = paste0(
+             # 'Fecha y hora de observación: ', time_observed_at, 
+             'Registros cada ', periodVars$unit_text, 
+             ':', 
+             eval(parse(text = periodVars$count_variable)))) %>% 
+           ggplot(., aes(x=time_observed_at, 
+                         y=eval(parse(text = periodVars$count_variable)), 
+                         group=2, text=label)) +
+           geom_line(color='red', size = 1.5)+
+           geom_point(col="grey10", size=0.5) +
+           scale_x_datetime(breaks = periodVars$unit_variable,
+                            date_labels="%d\n%H:%M") +
+           theme_light()+
+           labs(x='', y= 'Número de observaciones') , 
+         tooltip="text", 
+         dynamicTicks = T) 
+```
+
+```{r}
+#| label: tictoc
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+tictoc::toc()
+```
