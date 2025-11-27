@@ -2,6 +2,7 @@
 
 ## NaturalistaUY (iNaturalist Uruguay)
 - [Dos registros por departamento - de cara a la GBS 2025](GBS_dos_por_departamento.html)
+- [Reporte de la GBS 2025](GBS_2025.html)
 
 ## iNaturalist network
 
