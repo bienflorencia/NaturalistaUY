@@ -27,6 +27,7 @@ editor_options:
 #| message: false
 #| warning: false
 
+library(ggpattern)
 library(httr)
 library(jsonlite)
 library(knitr)
@@ -242,6 +243,56 @@ tm_shape(planta_por_depto %>%
           options = opt_tm_text(remove_overlap = TRUE)) 
 ```
 
+### Otro mapa de plantas
+
+```{r}
+#| label: plantas-figura
+
+dir.create(path = 'data/fotos', showWarnings = FALSE)
+
+datos <- planta_por_depto %>%
+  filter(!is.na(photo_url_1)) %>%
+  mutate(photo_med = sub("square", "medium", photo_url_1),
+         file = file.path("fotos", paste0(taxon_id, ".jpeg")),
+         etiqueta  =  taxon_name) #coalesce(str_to_sentence(common_name), taxon_name)
+  
+purrr::walk2(datos$photo_med, datos$file,
+             ~ if (!file.exists(.y)) download.file(.x, .y, mode = "wb", quiet = TRUE))
+
+mapa <-  uruguay %>% select(departamento=NAME_1) %>%
+  inner_join(datos %>% st_drop_geometry() %>% select(departamento, file, etiqueta),
+             by = "departamento")
+
+# Label positions (inside each polygon)
+etiquetas <- st_point_on_surface(mapa)
+
+ggplot(mapa) +
+  geom_sf_pattern(
+    aes(pattern_filename = file),
+    pattern      = "image",
+    pattern_type = "expand",
+    pattern_res  = 100, 
+    fill         = NA,
+    colour       = "white",
+    linewidth    = 0.4
+  ) +
+  scale_pattern_filename_identity() +
+  geom_sf_label(
+    data = etiquetas,
+    aes(label = etiqueta),
+    size          = 3,
+    fill          = alpha("white", 0.75),   # semi-transparent so the photo still shows
+    label.size    = 0,                      # no border
+    label.padding = unit(0.15, "lines"),
+    check_overlap = FALSE
+  ) +
+  theme_void()
+
+ggsave("fotos/mapa_plantas_2026.png", width = 9, height = 9, dpi = 300,
+       device = ragg::agg_png, bg = "white")
+```
+
+
 ### Animal más registrados por departamento
 
 ```{r}
@@ -264,5 +315,52 @@ tm_shape(animal_por_depto %>%
           options = opt_tm_text(remove_overlap = TRUE)) 
 ```
 
+### Otro mapa de animales
 
+```{r}
+#| label: animales-figura
 
+dir.create(path = 'data/fotos', showWarnings = FALSE)
+
+datos <- animal_por_depto %>%
+  filter(!is.na(photo_url_1)) %>%
+  mutate(which_photo = coalesce(photo_url_4, photo_url_3, photo_url_2, photo_url_1),
+    photo_med = sub("square", "medium", which_photo),
+         file = file.path("fotos", paste0(taxon_id, ".jpeg")),
+         etiqueta  =  taxon_name) #coalesce(str_to_sentence(common_name), taxon_name)
+  
+purrr::walk2(datos$photo_med, datos$file,
+             ~ if (!file.exists(.y)) download.file(.x, .y, mode = "wb", quiet = TRUE))
+
+mapa <-  uruguay %>% select(departamento=NAME_1) %>%
+  inner_join(datos %>% st_drop_geometry() %>% select(departamento, file, etiqueta),
+             by = "departamento")
+
+# Label positions (inside each polygon)
+etiquetas <- st_point_on_surface(mapa)
+
+ggplot(mapa) +
+  geom_sf_pattern(
+    aes(pattern_filename = file),
+    pattern      = "image",
+    pattern_type = "expand",
+    pattern_res  = 100, 
+    fill         = NA,
+    colour       = "white",
+    linewidth    = 0.4
+  ) +
+  scale_pattern_filename_identity() +
+  geom_sf_label(
+    data = etiquetas,
+    aes(label = etiqueta),
+    size          = 3,
+    fill          = alpha("white", 0.75),   # semi-transparent so the photo still shows
+    label.size    = 0,                      # no border
+    label.padding = unit(0.15, "lines"),
+    check_overlap = FALSE
+  ) +
+  theme_void()
+
+# ggsave("fotos/mapa_animales_2026.png", width = 9, height = 9, dpi = 300,
+#        device = ragg::agg_png, bg = "white")
+```
